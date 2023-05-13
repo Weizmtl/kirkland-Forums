@@ -192,6 +192,12 @@ watch(
     },
     {immediate: true, deep: true}
 );
+//Listen to whether the login box is displayed
+watch(() => store.state.showLogin, (newVal, oldVal) => {
+    if (newVal) {
+        loginAndRegister(1);
+    }
+}, {immediate: true, deep: true});
 
 </script>
 
