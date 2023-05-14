@@ -7,8 +7,27 @@
                     <span v-for="item in logoInfo" :style="{ color: item.color }">{{ item.letter }}
                     </span>
                 </router-link>
+
                 <!-- subsection panel -->
                 <div class="menu-panel">
+                    <span class="menu-item">All</span>
+                    <template v-for="board in boardList">
+                        <el-popover
+                                placement="bottom-start"
+                                :width="300"
+                                trigger="hover" v-if="board.children.length >0"
+                        >
+                            <template #reference>
+                                <span class="menu-item">{{ board.boardName }}</span>
+                            </template>
+                            <div class="sub-board-list">
+                                <span class="sub-board"
+                                      v-for="subBoard in board.children">{{ subBoard.boardName }}</span>
+                            </div>
+                        </el-popover>
+                        <span class="menu-item" v-else>{{board.boardName}}</span>
+                    </template>
+
                 </div>
 
                 <!-- login and register panel -->
@@ -23,7 +42,7 @@
                     </div>
 
                     <!--display user Info-->
-                    <template v-if ="userInfo.userId">
+                    <template v-if="userInfo.userId">
                         <div class="message-info">
                             <el-dropdown>
                                 <el-badge :value="12" class="item">
@@ -86,8 +105,9 @@ const router = useRouter();
 const route = useRoute();
 const store = useStore();
 
-const api={
-    getUserInfo:"/getUserInfo",
+const api = {
+    getUserInfo: "/getUserInfo",
+    loadBoard: "/board/loadBoard",
 }
 
 const logoInfo = ref([
@@ -171,13 +191,26 @@ onMounted(() => {
 //get user info
 const getUserInfo = async () => {
     let result = await proxy.Request({
-        url:api.getUserInfo,
+        url: api.getUserInfo,
     });
-    if(!result){
+    if (!result) {
         return;
     }
-    store.commit("updateLoginUserInfo",result.data);
-}
+    store.commit("updateLoginUserInfo", result.data);
+};
+//Obtain forums section info.
+const boardList = ref([]);
+const loadBoard = async () => {
+    let result = await proxy.Request({
+        url: api.loadBoard,
+    });
+    if (!result) {
+        return;
+    }
+    boardList.value = result.data;
+};
+loadBoard();
+
 
 //Listens for login user info.
 const userInfo = ref({});
@@ -226,6 +259,10 @@ watch(() => store.state.showLogin, (newVal, oldVal) => {
 
     .menu-panel {
       flex: 1;
+        .menu-item{
+            margin-left: 20px;
+            cursor: pointer;
+        }
     }
 
     .user-info-panel {
@@ -255,5 +292,22 @@ watch(() => store.state.showLogin, (newVal, oldVal) => {
       }
     }
   }
+}
+.sub-board-list {
+    display:flex;
+    flex-wrap:wrap;
+    .sub-board{
+        padding:0px 10px;
+        border-radius:20px;
+        margin-right: 10px;
+        background: rgb(239,239,239);
+        border: 1px solid #ddd;
+        color: rgb(119,118,118);
+        margin-top: 10px;
+        cursor: pointer;
+    }
+    .sub-board:hover{
+        color: var(--link);
+    }
 }
 </style>
