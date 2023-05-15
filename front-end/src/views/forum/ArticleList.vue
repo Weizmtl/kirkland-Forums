@@ -11,7 +11,7 @@
             </div>
             <div class="article-list">
                 <div v-for="item in articleListInfo.list">
-                    {{ item.title }}
+                    <ArticleListItem :data="item"></ArticleListItem>
                 </div>
             </div>
         </div>
@@ -19,8 +19,10 @@
 </template>
 
 <script setup>
+
 import {ref, reactive, getCurrentInstance} from "vue";
 import {useRouter, useRoute} from "vue-router";
+import ArticleListItem from "@/views/forum/ArticleListItem.vue";
 
 const {proxy} = getCurrentInstance();
 const router = useRouter();
