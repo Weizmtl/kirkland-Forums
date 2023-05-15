@@ -86,7 +86,7 @@
                 </div>
             </div>
         </div>
-        <div>
+        <div class="body-content">
             <router-view/>
         </div>
         <!-- login and register -->
@@ -236,6 +236,7 @@ watch(() => store.state.showLogin, (newVal, oldVal) => {
 
 <style lang="scss">
 .header {
+  top:0px;
   width: 100%;
   position: fixed;
   box-shadow: 0 2px 6px 0 #ddd;
@@ -309,5 +310,10 @@ watch(() => store.state.showLogin, (newVal, oldVal) => {
     .sub-board:hover{
         color: var(--link);
     }
+}
+.body-content{
+    margin-top: 60px;
+    position:relative;
+
 }
 </style>
