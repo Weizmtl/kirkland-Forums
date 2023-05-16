@@ -10,9 +10,11 @@
                 <div>Newest</div>
             </div>
             <div class="article-list">
-                <div v-for="item in articleListInfo.list">
-                    <ArticleListItem :data="item"></ArticleListItem>
-                </div>
+                <DataList :dataSource="articleListInfo" @loadData="loadArticle">
+                    <template #default="{data}">
+                        <ArticleListItem :data="data"></ArticleListItem>
+                    </template>
+                </DataList>
             </div>
         </div>
     </div>
@@ -23,6 +25,7 @@
 import {ref, reactive, getCurrentInstance} from "vue";
 import {useRouter, useRoute} from "vue-router";
 import ArticleListItem from "@/views/forum/ArticleListItem.vue";
+import DataList from "@/components/DataList.vue";
 
 const {proxy} = getCurrentInstance();
 const router = useRouter();
@@ -35,11 +38,15 @@ const api = {
 //articles list
 const articleListInfo = ref({});
 const loadArticle = async () => {
+    let params ={
+        pageNo: articleListInfo.value.pageNo,
+        boardId: 0,
+    }
+
+
     let result = await proxy.Request({
         url: api.loadArticle,
-        params:{
-          boardId:0,
-        },
+        params: params,
     });
     if (!result) {
         return
@@ -62,6 +69,9 @@ loadArticle();
       font-size: 14px;
       border-bottom: 1px solid #ddd;
     }
+      .article-list{
+          padding-bottom: 5px;
+      }
   }
 
 }
