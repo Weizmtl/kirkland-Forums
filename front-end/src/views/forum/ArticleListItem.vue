@@ -32,15 +32,14 @@
 
                 </div>
             </div>
-            <div class="cover" v-if="data.cover">
-                <img :src="'/api/file/getImage/' + data.cover"/>
-            </div>
+            <Cover :cover="data.cover" :width="100"></Cover>
         </div>
     </div>
 </template>
 
 <script setup>
 import Avatar from "@/components/Avatar.vue";
+import Cover from "@/components/Cover.vue";
 
 const props = defineProps({
     data: {

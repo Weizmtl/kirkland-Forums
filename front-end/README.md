@@ -18,3 +18,7 @@ Encapsulated message, difined message global method.
 May 10th
 Create Message and Request JS file
 Preliminary completion of request verification code logic
+
+May 15th
+Update article list and article list content's layouts and styles. 
+update each article cover's layout and styles
