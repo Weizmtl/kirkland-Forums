@@ -42,7 +42,7 @@ export default createStore({
         },
         saveBoardList(state, value) {
             state.boardList = value;
-        },setActivePboardId: (state, value) => {
+        }, setActivePboardId: (state, value) => {
             state.activePboardId = value;
         },
         setActiveBoardId: (state, value) => {
