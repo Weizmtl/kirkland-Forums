@@ -4,7 +4,12 @@
 
     <!--secondary board info-->
     <div class="sub-board" v-if="pBoardId">
-      <span v-for="item in subBoardList">{{ item.boardName }}</span>
+      <span :class="['board-item', boardId == 0 ? 'active' : '']">
+        <router-link :to="`/forum/${pBoardId}`">All</router-link>
+      </span>
+      <span v-for="item in subBoardList" :class="['board-item', item.boardId == boardId ? 'active' : '']">
+        <router-link :to="`/forum/${item.pBoardId}/${item.boardId}`">{{ item.boardName }}</router-link>
+      </span>
     </div>
     <div class="article-panel">
       <div class="top-tab">
@@ -79,17 +84,19 @@ loadArticle();
 //secondary board
 const subBoardList = ref([]);
 const setSubBoard = () => {
-    subBoardList.value = store.getters.getSubBoardList(pBoardId.value);
+  subBoardList.value = store.getters.getSubBoardList(pBoardId.value);
 }
 
-//Listen for routing changes
+//Monitor routing changes
 watch(
     () => route.params,
     (newVal, oldVal) => {
       pBoardId.value = newVal.pBoardId;
-      boardId.value = newVal.boardId;
+      boardId.value = newVal.boardId || 0;
       setSubBoard();
       loadArticle();
+      store.commit("setActivePboardId", newVal.pBoardId);
+      store.commit("setActiveBoardId", newVal.boardId);
     },
     {immediate: true, deep: true}
 );
@@ -100,7 +107,7 @@ watch(
     (newVal, oldVal) => {
       setSubBoard();
     },
-    { immediate: true, deep: true }
+    {immediate: true, deep: true}
 );
 
 
@@ -108,6 +115,33 @@ watch(
 
 <style lang="scss">
 .article-list-body {
+  .sub-board {
+    padding: 10px 0px 12px 0px;
+
+    .board-item {
+      background: #fff;
+      border-radius: 15px;
+      padding: 2px 10px;
+      margin-right: 10px;
+      color: #909090;
+      cursor: pointer;
+      font-size: 14px;
+
+      a {
+        text-decoration: none;
+        color: #909090;
+      }
+    }
+
+    .active {
+      background: var(--link);
+
+      a {
+        color: #fff;
+      }
+    }
+  }
+
   .article-panel {
     background: #fff;
 

@@ -8,8 +8,11 @@ export default createStore({
         //display login or not
         showLogin: false,
         //Boards info
-        boardList:[],
-
+        boardList: [],
+        //current primary board
+        activePBoardId: 0,
+        //current secondary board
+        activeBoardId: 0,
     },
     getters: {
         getLoginUserInfo: (state) => {
@@ -18,11 +21,16 @@ export default createStore({
         getBoardList: (state) => {
             return state.boardList;
         },
-        getSubBoardList: (state)=>(boardId)=>{
-            let board = state.boardList.find(item=>{
+        getSubBoardList: (state) => (boardId) => {
+            let board = state.boardList.find(item => {
                 return item.boardId == boardId;
             })
-            return board?board.children:[];
+            return board ? board.children : [];
+        }, getActivePBoardId: (state) => {
+            return state.activePBoardId;
+        },
+        getActiveBoardId: (state) => {
+            return state.activeBoardId;
         }
     },
     mutations: {
@@ -34,7 +42,12 @@ export default createStore({
         },
         saveBoardList(state, value) {
             state.boardList = value;
-        }
+        },setActivePboardId: (state, value) => {
+            state.activePboardId = value;
+        },
+        setActiveBoardId: (state, value) => {
+            state.activeBoardId = value;
+        },
     },
     actions: {},
     modules: {},
