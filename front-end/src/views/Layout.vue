@@ -209,6 +209,7 @@ const loadBoard = async () => {
         return;
     }
     boardList.value = result.data;
+    store.commit("saveBoardList",result.data);
 };
 loadBoard();
 

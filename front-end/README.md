@@ -28,3 +28,6 @@ Encapsulated paging function
 Paging optimization and switching
 The jump logic of primary and secondary plates
 Listen for routing changes
+
+May 17th
+Monitor plate data changes
