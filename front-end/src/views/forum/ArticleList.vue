@@ -52,20 +52,20 @@ const loadArticle = async () => {
         boardId: 0,
         orderType:orderType.value,
     }
-
-
     let result = await proxy.Request({
         url: api.loadArticle,
         params: params,
         showLoading:false,
     });
-    loading.value = false
+    loading.value = false;
     if (!result) {
-        return
+        return;
     }
     articleListInfo.value = result.data;
 };
 loadArticle();
+
+
 
 </script>
 

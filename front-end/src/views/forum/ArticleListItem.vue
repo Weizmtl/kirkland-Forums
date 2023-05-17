@@ -4,7 +4,7 @@
             <div class="article-body">
                 <div class="user-info">
                     <Avatar :userId="data.userId" :width="30"></Avatar>
-                    <router-link to="'/users/' + data.userId" class="link-info">{{ data.nickName }}</router-link>
+                    <router-link :to="'/user/' + data.userId" class="link-info">{{ data.nickName }}</router-link>
                     <el-divider direction="vertical"></el-divider>
                     <div class="post-time">{{ data.postTime }}</div>
                     <div class="address">&nbsp;·&nbsp;{{ data.userIpAddress }}</div>

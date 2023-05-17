@@ -10,7 +10,7 @@
 
                 <!-- subsection panel -->
                 <div class="menu-panel">
-                    <span class="menu-item">All</span>
+                    <span class="menu-item" to="/">Home</span>
                     <template v-for="board in boardList">
                         <el-popover
                                 placement="bottom-start"
@@ -18,14 +18,16 @@
                                 trigger="hover" v-if="board.children.length >0"
                         >
                             <template #reference>
-                                <span class="menu-item">{{ board.boardName }}</span>
+                                <span class="menu-item" @click="boardClickHandler(board)">{{ board.boardName }}</span>
                             </template>
                             <div class="sub-board-list">
                                 <span class="sub-board"
-                                      v-for="subBoard in board.children">{{ subBoard.boardName }}</span>
+                                      v-for="subBoard in board.children"
+                                      @click="subBoardClickHandler(subBoard)">{{ subBoard.boardName }}
+                                </span>
                             </div>
                         </el-popover>
-                        <span class="menu-item" v-else>{{board.boardName}}</span>
+                        <span class="menu-item" v-else @click="boardClickHandler(board)">{{ board.boardName }}</span>
                     </template>
 
                 </div>
@@ -97,12 +99,11 @@
 <script setup>
 import LoginAndRegister from "./LoginAndRegister.vue";
 import {ref, reactive, getCurrentInstance, onMounted, watch} from "vue";
-import {useRouter, useRoute} from "vue-router";
+import {useRouter} from "vue-router";
 import {useStore} from "vuex";
 
 const {proxy} = getCurrentInstance();
 const router = useRouter();
-const route = useRoute();
 const store = useStore();
 
 const api = {
@@ -232,11 +233,21 @@ watch(() => store.state.showLogin, (newVal, oldVal) => {
     }
 }, {immediate: true, deep: true});
 
+//Plate click
+const boardClickHandler = (board) => {
+    router.push(`/forum/${board.boardId}`);
+}
+
+//Secondary plate
+const subBoardClickHandler = (subBoard) => {
+    router.push(`/forum/${subBoard.pBoardId}/${subBoard.boardId}`);
+}
+
 </script>
 
 <style lang="scss">
 .header {
-  top:0px;
+  top: 0px;
   width: 100%;
   position: fixed;
   box-shadow: 0 2px 6px 0 #ddd;
@@ -260,10 +271,11 @@ watch(() => store.state.showLogin, (newVal, oldVal) => {
 
     .menu-panel {
       flex: 1;
-        .menu-item{
-            margin-left: 20px;
-            cursor: pointer;
-        }
+
+      .menu-item {
+        margin-left: 20px;
+        cursor: pointer;
+      }
     }
 
     .user-info-panel {
@@ -294,26 +306,30 @@ watch(() => store.state.showLogin, (newVal, oldVal) => {
     }
   }
 }
+
 .sub-board-list {
-    display:flex;
-    flex-wrap:wrap;
-    .sub-board{
-        padding:0px 10px;
-        border-radius:20px;
-        margin-right: 10px;
-        background: rgb(239,239,239);
-        border: 1px solid #ddd;
-        color: rgb(119,118,118);
-        margin-top: 10px;
-        cursor: pointer;
-    }
-    .sub-board:hover{
-        color: var(--link);
-    }
+  display: flex;
+  flex-wrap: wrap;
+
+  .sub-board {
+    padding: 0px 10px;
+    border-radius: 20px;
+    margin-right: 10px;
+    background: rgb(239, 239, 239);
+    border: 1px solid #ddd;
+    color: rgb(119, 118, 118);
+    margin-top: 10px;
+    cursor: pointer;
+  }
+
+  .sub-board:hover {
+    color: var(--link);
+  }
 }
-.body-content{
-    margin-top: 60px;
-    position:relative;
+
+.body-content {
+  margin-top: 60px;
+  position: relative;
 
 }
 </style>

@@ -22,3 +22,8 @@ Preliminary completion of request verification code logic
 May 15th
 Update article list and article list content's layouts and styles. 
 update each article cover's layout and styles
+
+May 16th
+Encapsulated paging function
+Paging optimization and switching
+The jump logic of primary and secondary plates

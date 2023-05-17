@@ -11,6 +11,18 @@ const router = createRouter({
         path: '/',
         name: "AlL Articles",
         component: () => import('@/views/forum/ArticleList.vue'),
+      },{
+        path: '/forum/:pBoardId',
+        name: "Primary Plate",
+        component: () => import('@/views/forum/ArticleList.vue'),
+      },{
+        path: '/forum/:pBoardId/:boardId/',
+        name: "Secondary Plate",
+        component: () => import('@/views/forum/ArticleList.vue'),
+      },{
+        path: '/user/:userId',
+        name: "user information",
+        component: () => import('@/views/ucenter/Ucenter.vue'),
       }]
     }
   ]
