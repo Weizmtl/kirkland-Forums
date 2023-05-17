@@ -11,7 +11,7 @@
             </div>
             <div class="article-list">
                 <DataList :loading="loading" :dataSource="articleListInfo" @loadData="loadArticle"
-                          noDataMsg= "Haven't found any yet. To be the first? ">
+                          noDataMsg="Haven't found any yet. To be the first? ">
                     <template #default="{data}">
                         <ArticleListItem :data="data"></ArticleListItem>
                     </template>
@@ -23,7 +23,7 @@
 
 <script setup>
 
-import {ref, reactive, getCurrentInstance} from "vue";
+import {ref, reactive, getCurrentInstance, watch} from "vue";
 import {useRouter, useRoute} from "vue-router";
 import ArticleListItem from "@/views/forum/ArticleListItem.vue";
 import DataList from "@/components/DataList.vue";
@@ -36,26 +36,31 @@ const api = {
     loadArticle: "/forum/loadArticle",
 };
 
-const changeOrderType =(type)=>{
+const changeOrderType = (type) => {
     orderType.value = type;
     loadArticle();
 }
 
 //articles list
 const orderType = ref(0);
-const loading=ref(false)
+const loading = ref(false)
 const articleListInfo = ref({});
+// primary plate
+const pBoardId = ref(0);
+// secondary plate
+const boardId = ref(0);
 const loadArticle = async () => {
     loading.value = true;
     let params = {
         pageNo: articleListInfo.value.pageNo,
-        boardId: 0,
-        orderType:orderType.value,
+        pBoardId: pBoardId.value,
+        boardId: boardId.value,
+        orderType: orderType.value,
     }
     let result = await proxy.Request({
         url: api.loadArticle,
         params: params,
-        showLoading:false,
+        showLoading: false,
     });
     loading.value = false;
     if (!result) {
@@ -65,7 +70,16 @@ const loadArticle = async () => {
 };
 loadArticle();
 
-
+//Listen for routing changes
+watch(
+    () => route.params,
+    (newVal, oldVal) => {
+        pBoardId.value = newVal.pBoardId;
+        boardId.value = newVal.boardId
+        loadArticle();
+    },
+    {immediate: true, deep: true}
+);
 
 </script>
 
@@ -80,12 +94,14 @@ loadArticle();
       padding: 10px;
       font-size: 14px;
       border-bottom: 1px solid #ddd;
-        .tab{
-            cursor: pointer;
-        }
-        .active{
-            color: var(--link);
-        }
+
+      .tab {
+        cursor: pointer;
+      }
+
+      .active {
+        color: var(--link);
+      }
     }
   }
 }
