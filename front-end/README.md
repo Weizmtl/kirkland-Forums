@@ -32,3 +32,6 @@ Listen for routing changes
 May 17th
 Monitor plate data changes
 Update primary secondary plates layouts and styles
+
+MAy 18th
+create articleDetail.vue

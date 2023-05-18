@@ -15,7 +15,7 @@
             <router-link :to="`/forum/${data.pBoardId}/${data.boardId}`" class="link-info">{{ data.boardName }}</router-link>
           </template>
         </div>
-        <router-link to="/" class="title">
+        <router-link :to="`/post/${data.articleId}`" class="title">
           <span v-if="data.topType==1" class="top">TOP</span>
           <span class="title-info>">{{ data.title }}</span>
         </router-link>
@@ -35,7 +35,9 @@
 
         </div>
       </div>
+      <router-link :to="`/post/${data.articleId}`">
       <Cover :cover="data.cover" :width="100"></Cover>
+      </router-link>
     </div>
   </div>
 </template>
