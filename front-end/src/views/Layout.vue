@@ -10,7 +10,9 @@
 
         <!-- subsection panel -->
         <div class="menu-panel">
-          <span class="menu-item" to="/">Home</span>
+          <router-link :class="['menu-item home',
+              activePboardId == undefined ? 'active' : '',]" to="/">Home
+          </router-link>
           <template v-for="board in boardList">
             <el-popover
                 placement="bottom-start"
@@ -32,7 +34,8 @@
             </el-popover>
             <span :class="[
                     'menu-item',
-                    board.boardId == activePboardId ? 'active' : '',]" v-else @click="boardClickHandler(board)">{{ board.boardName }}</span>
+                    board.boardId == activePboardId ? 'active' : '',]" v-else
+                  @click="boardClickHandler(board)">{{ board.boardName }}</span>
           </template>
 
         </div>
@@ -250,7 +253,6 @@ const subBoardClickHandler = (subBoard) => {
 }
 
 //currently selected plate
-
 const activePboardId = ref(0);
 watch(
     () => store.state.activePboardId,
@@ -303,8 +305,14 @@ watch(
         margin-left: 20px;
         cursor: pointer;
       }
-      .active{
-        color:var(--link);
+
+      .home {
+        text-decoration: none;
+        color: #000;
+      }
+
+      .active {
+        color: var(--link);
       }
     }
 

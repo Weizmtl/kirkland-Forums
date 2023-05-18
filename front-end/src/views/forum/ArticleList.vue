@@ -79,7 +79,7 @@ const loadArticle = async () => {
   }
   articleListInfo.value = result.data;
 };
-loadArticle();
+
 
 //secondary board
 const subBoardList = ref([]);
@@ -148,7 +148,7 @@ watch(
     .top-tab {
       display: flex;
       align-items: center;
-      padding: 10px;
+      padding: 10px 15px;
       font-size: 14px;
       border-bottom: 1px solid #ddd;
 

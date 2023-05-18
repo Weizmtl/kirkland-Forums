@@ -10,7 +10,7 @@ export default createStore({
         //Boards info
         boardList: [],
         //current primary board
-        activePBoardId: 0,
+        activePboardId: 0,
         //current secondary board
         activeBoardId: 0,
     },
@@ -26,8 +26,8 @@ export default createStore({
                 return item.boardId == boardId;
             })
             return board ? board.children : [];
-        }, getActivePBoardId: (state) => {
-            return state.activePBoardId;
+        }, getactivePboardId: (state) => {
+            return state.activePboardId;
         },
         getActiveBoardId: (state) => {
             return state.activeBoardId;
@@ -44,8 +44,7 @@ export default createStore({
             state.boardList = value;
         }, setActivePboardId: (state, value) => {
             state.activePboardId = value;
-        },
-        setActiveBoardId: (state, value) => {
+        }, setActiveBoardId: (state, value) => {
             state.activeBoardId = value;
         },
     },
