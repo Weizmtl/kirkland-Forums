@@ -35,3 +35,4 @@ Update primary secondary plates layouts and styles
 
 MAy 18th
 create articleDetail.vue
+update article detail page's top Navigation
