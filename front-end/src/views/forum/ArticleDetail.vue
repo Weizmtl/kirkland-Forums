@@ -24,9 +24,9 @@
     <div class="details-container" :style="{width:proxy.globalInfo.bodyWidth - 300 + 'px'}">
 
       <div class="article-detail">
-<!--        Title-->
+        <!--        Title-->
         <div class="title">{{ articleInfo.title }}</div>
-<!--        user info-->
+        <!--        user info-->
         <div class="user-info">
           <Avatar :userId="articleInfo.userId" :width="50"></Avatar>
 
@@ -43,7 +43,22 @@
             </div>
           </div>
         </div>
+        <!--   article Content-->
         <div class="detail" id="detail" v-html="articleInfo.content"></div>
+      </div>
+      <!--        attachment-->
+      <div class="attachment-panel" v-if="attachment" id="view-attachment">
+        <div class="title">Attachment</div>
+        <div class="attachment-info">
+          <div class="iconfont icon-zip item" item></div>
+          <div class="file-name item">{{ attachment.fileName }}</div>
+          <div class="size item">{{ attachment.fileSize }}</div>
+          <div class="item">Required<span class="integral">{{ attachment.integral }}</span>points</div>
+          <div class="download-count item">Downloaded{{ attachment.downloadCount }}times</div>
+          <div class="download-btn item">
+            <el-button type="primary" size="small">download</el-button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -63,8 +78,10 @@ const store = useStore();
 const api = {
   getArticleDetail: "/forum/getArticleDetail",
 };
-
+// article content
 const articleInfo = ref({});
+// article attachment
+const attachment = ref([]);
 const getArticleDetail = async (articleId) => {
   let result = await proxy.Request({
     url: api.getArticleDetail,
@@ -76,6 +93,7 @@ const getArticleDetail = async (articleId) => {
     return;
   }
   articleInfo.value = result.data.forumArticle;
+  attachment.value = result.data.attachment;
 };
 
 onMounted(() => {
@@ -138,8 +156,32 @@ onMounted(() => {
           }
         }
       }
-      .detail{
-        line-height:22px
+
+      .detail {
+        line-height: 22px;
+
+        a {
+          text-decoration: none;
+          color: var(--link);
+        }
+
+        img {
+          max-width: 90%;
+          cursor: pointer;
+        }
+      }
+    }
+
+    .attachment-panel{
+      background: #fff;
+      margin-top: 20px;
+      padding: 20px;
+      .title{
+        font-size:16px;
+      }
+      .attachment-info{
+        display: flex;
+        align-items: center;
       }
     }
   }
