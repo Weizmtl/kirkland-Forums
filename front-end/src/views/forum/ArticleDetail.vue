@@ -52,7 +52,7 @@
         <div class="attachment-info">
           <div class="iconfont icon-zip item" item></div>
           <div class="file-name item">{{ attachment.fileName }}</div>
-          <div class="size item">{{ attachment.fileSize }}</div>
+          <div class="size item">{{ proxy.Utils.sizeToStr(attachment.fileSize) }}</div>
           <div class="item">Required<span class="integral">{{ attachment.integral }}</span>points</div>
           <div class="download-count item">Downloaded{{ attachment.downloadCount }}times</div>
           <div class="download-btn item">
@@ -60,7 +60,30 @@
           </div>
         </div>
       </div>
+      <!--        comment-->
+      <div class="comment-panel" id="view-comment"></div>
     </div>
+
+  </div>
+  <!--      Left side shortcut-->
+  <div class="quick-panel" :style="{left :quickPanelLeft + 'px'}">
+<!--    Like shortcut-->
+    <el-badge :value="articleInfo.goodCount" type="info" :hidden="!articleInfo.goodCount >0">
+      <div class="quick-item">
+        <span class="iconfont icon-good"></span>
+      </div>
+    </el-badge>
+<!--      comment shortcut-->
+    <el-badge :value="articleInfo.commentCount" type="info" :hidden="!articleInfo.commentCount >0">
+      <div class="quick-item">
+        <span class="iconfont icon-comment"></span>
+      </div>
+    </el-badge>
+<!--    attachment shortcut-->
+      <div class="quick-item">
+        <span class="iconfont icon-attachment"></span>
+      </div>
+
   </div>
 </template>
 
@@ -99,6 +122,9 @@ const getArticleDetail = async (articleId) => {
 onMounted(() => {
   getArticleDetail(route.params.articleId);
 });
+
+// Left side shortcut
+const quickPanelLeft = (window.innerWidth - proxy.globalInfo.bodyWidth) / 2 - 110;
 
 </script>
 
@@ -172,20 +198,55 @@ onMounted(() => {
       }
     }
 
-    .attachment-panel{
+    .attachment-panel {
       background: #fff;
       margin-top: 20px;
       padding: 20px;
-      .title{
-        font-size:16px;
+
+      .title {
+        font-size: 16px;
       }
-      .attachment-info{
+
+      .attachment-info {
         display: flex;
         align-items: center;
+        color: #9f9f9f;
+        margin-top: 10px;
+
+        .item {
+          margin-right: 10px;
+        }
+
+        .icon-zip {
+          font-size: 20px;
+          color: #6ca1f7;
+        }
+
+        .file-name {
+          color: #6ca1f7;
+        }
+
+        .integral {
+          color: red;
+          padding: 0px 5px;
+        }
       }
     }
+
+    .comment-panel {
+      margin-top: 20px;
+      background: #fff;
+    }
+
+
   }
 }
 
+.quick-panel {
+  position: absolute;
+  width: 50px;
+  background: #6ca1f7;
+  top:200px;
+}
 
 </style>
