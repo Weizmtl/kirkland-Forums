@@ -245,8 +245,22 @@ const quickPanelLeft = (window.innerWidth - proxy.globalInfo.bodyWidth) / 2 - 11
 .quick-panel {
   position: absolute;
   width: 50px;
-  background: #6ca1f7;
-  top:200px;
+  top:150px;
+  text-align: center;
+  .quick-item{
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background: #fff;
+    margin-bottom: 30px;
+    .iconfont{
+      font-size: 20px;
+      color: var(--text2);
+    }
+  }
 }
 
 </style>

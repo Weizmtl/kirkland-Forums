@@ -33,6 +33,10 @@ body {
   background: rgb(243, 243, 243);
 }
 
+*{
+  box-sizing: border-box;
+}
+
 .a-link {
   text-decoration: none;
   color: var(--link);
