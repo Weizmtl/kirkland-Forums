@@ -69,18 +69,18 @@
   <div class="quick-panel" :style="{left :quickPanelLeft + 'px'}">
 <!--    Like shortcut-->
     <el-badge :value="articleInfo.goodCount" type="info" :hidden="!articleInfo.goodCount >0">
-      <div class="quick-item">
-        <span class="iconfont icon-good"></span>
+      <div class="quick-item" @click="doLikeHandler">
+        <span :class="['iconfont icon-good', haveLike ? 'have-like' : '']"></span>
       </div>
     </el-badge>
 <!--      comment shortcut-->
     <el-badge :value="articleInfo.commentCount" type="info" :hidden="!articleInfo.commentCount >0">
-      <div class="quick-item">
+      <div class="quick-item" @click="goToPosition('view-comment')">
         <span class="iconfont icon-comment"></span>
       </div>
     </el-badge>
 <!--    attachment shortcut-->
-      <div class="quick-item">
+      <div class="quick-item" @click="goToPosition('view-attachment')">
         <span class="iconfont icon-attachment"></span>
       </div>
 
@@ -100,11 +100,14 @@ const store = useStore();
 
 const api = {
   getArticleDetail: "/forum/getArticleDetail",
+  doLike: "/forum/doLike",
 };
 // article content
 const articleInfo = ref({});
 // article attachment
 const attachment = ref([]);
+//Whether clicked the like
+const haveLike = ref(false);
 const getArticleDetail = async (articleId) => {
   let result = await proxy.Request({
     url: api.getArticleDetail,
@@ -117,6 +120,7 @@ const getArticleDetail = async (articleId) => {
   }
   articleInfo.value = result.data.forumArticle;
   attachment.value = result.data.attachment;
+  haveLike.value = result.data.haveLike;
 };
 
 onMounted(() => {
@@ -125,6 +129,33 @@ onMounted(() => {
 
 // Left side shortcut
 const quickPanelLeft = (window.innerWidth - proxy.globalInfo.bodyWidth) / 2 - 110;
+
+const goToPosition = (domId) => {
+  document.querySelector("#" + domId).scrollIntoView();
+};
+
+//like
+const doLikeHandler = async () => {
+  if (!store.getters.getLoginUserInfo) {
+    store.commit("showLogin", true);
+    return;
+  }
+  let result = await proxy.Request({
+    url: api.doLike,
+    params: {
+      articleId: articleInfo.value.articleId,
+    },
+  });
+  if (!result) {
+    return;
+  }
+  haveLike.value = !haveLike.value;
+  let goodCount = 1;
+  if (!haveLike.value) {
+    goodCount = -1;
+  }
+  articleInfo.value.goodCount = articleInfo.value.goodCount + goodCount;
+};
 
 </script>
 
@@ -247,6 +278,10 @@ const quickPanelLeft = (window.innerWidth - proxy.globalInfo.bodyWidth) / 2 - 11
   width: 50px;
   top:150px;
   text-align: center;
+  .el-badge__content.is-fixed {
+    top: 5px;
+    right: 15px;
+  }
   .quick-item{
     width: 50px;
     height: 50px;
@@ -256,11 +291,16 @@ const quickPanelLeft = (window.innerWidth - proxy.globalInfo.bodyWidth) / 2 - 11
     border-radius: 50%;
     background: #fff;
     margin-bottom: 30px;
+    cursor: pointer;
     .iconfont{
       font-size: 20px;
       color: var(--text2);
     }
+    .have-like{
+      color: #DD4A68;
+    }
   }
+
 }
 
 </style>

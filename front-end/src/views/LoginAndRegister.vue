@@ -1,7 +1,7 @@
 <template>
     <div>
         <Dialog :show="dialogConfig.show" :title="dialogConfig.title" :buttons="dialogConfig.buttons" width="400px"
-                :showCancel="false" @close="dialogConfig.show = false">
+                :showCancel="false" @close="closeDialog">
 
             <el-form class="login-register" :model="formData" :rules="rules" ref="formDataRef">
 
@@ -388,6 +388,10 @@ const doSubmit = () => {
     });
 };
 
+const closeDialog = ()=>{
+  dialogConfig.show = false;
+  store.commit("showLogin",false);
+}
 
 </script>
 
