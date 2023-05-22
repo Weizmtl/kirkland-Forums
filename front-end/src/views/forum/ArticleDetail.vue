@@ -69,27 +69,30 @@
   </div>
   <!--      Left side shortcut-->
   <div class="quick-panel" :style="{left :quickPanelLeft + 'px'}">
-<!--    Like shortcut-->
+    <!--    Like shortcut-->
     <el-badge :value="articleInfo.goodCount" type="info" :hidden="!articleInfo.goodCount >0">
       <div class="quick-item" @click="doLikeHandler">
         <span :class="['iconfont icon-good', haveLike ? 'have-like' : '']"></span>
       </div>
     </el-badge>
-<!--      comment shortcut-->
+    <!--      comment shortcut-->
     <el-badge :value="articleInfo.commentCount" type="info" :hidden="!articleInfo.commentCount >0">
       <div class="quick-item" @click="goToPosition('view-comment')">
         <span class="iconfont icon-comment"></span>
       </div>
     </el-badge>
-<!--    attachment shortcut-->
-      <div class="quick-item" @click="goToPosition('view-attachment')">
-        <span class="iconfont icon-attachment"></span>
-      </div>
-
+    <!--    attachment shortcut-->
+    <div class="quick-item" @click="goToPosition('view-attachment')">
+      <span class="iconfont icon-attachment"></span>
+    </div>
+    <!--preview image-->
+    <ImageViewer ref="imageViewerRef" :imageList="previewImgList"></ImageViewer>
   </div>
 </template>
 
 <script setup>
+import hljs from "highlight.js";
+import "highlight.js/styles/atom-one-light.css";
 import {ref, reactive, getCurrentInstance, onMounted, nextTick, onUnmounted, watch,} from "vue";
 import {useRouter, useRoute} from "vue-router";
 import {useStore} from "vuex";
@@ -114,6 +117,7 @@ const articleInfo = ref({});
 const attachment = ref([]);
 //Whether clicked the like
 const haveLike = ref(false);
+
 const getArticleDetail = async (articleId) => {
   let result = await proxy.Request({
     url: api.getArticleDetail,
@@ -127,6 +131,11 @@ const getArticleDetail = async (articleId) => {
   articleInfo.value = result.data.forumArticle;
   attachment.value = result.data.attachment;
   haveLike.value = result.data.haveLike;
+
+  //image preview
+  imagePreview();
+  //code highlighting
+  highlightCode();
 };
 
 onMounted(() => {
@@ -214,15 +223,43 @@ const downloadDo = (fileId) => {
   document.location.href = api.attachmentDownload + "?fileId=" + fileId;
   attachment.value.downloadCount = attachment.value.downloadCount + 1;
 };
+// article image preview
+const imageViewerRef = ref(null);
+const previewImgList = ref([]);
+const imagePreview = () => {
+  nextTick(() => {
+    const imageNodeList = document
+        .querySelector("#detail")
+        .querySelectorAll("img");
+    const imageList = [];
+    imageNodeList.forEach((item, index) => {
+      const src = item.getAttribute("src");
+      imageList.push(src);
+      item.addEventListener("click", () => {
+        imageViewerRef.value.show(index);
+      });
+    });
+    previewImgList.value = imageList;
+  });
+};
 
+//Code highlighting
+const highlightCode = () => {
+  nextTick(() => {
+    let blocks = document.querySelectorAll("pre code");
+    blocks.forEach((item) => {
+      hljs.highlightBlock(item);
+    });
+  });
+};
 </script>
 
 <style lang="scss">
 
 .article-detail-body {
+  position: relative;
   .board-info {
     line-height: 40px;
-
     .icon-right {
       margin: 0px 10px;
     }
@@ -232,37 +269,34 @@ const downloadDo = (fileId) => {
     .article-detail {
       background: #fff;
       padding: 15px;
-
       .title {
-        font-weight: bold;
+        font-weight: bolder;
       }
-
       .user-info {
         margin-top: 15px;
         display: flex;
         padding-bottom: 10px;
         border-bottom: 1px solid #ddd;
-
         .user-info-detail {
           margin-left: 10px;
-
+          .nick-name {
+            text-decoration: none;
+            color: #4e5969;
+            font-size: 15px;
+          }
           .nick-name:hover {
             color: var(--link);
           }
-
           .time-info {
             margin-top: 5px;
             font-size: 13px;
             color: var(--text2);
-
             .iconfont {
               margin-left: 10px;
             }
-
             .iconfont::before {
               padding-right: 3px;
             }
-
             .btn-edit {
               .iconfont {
                 font-size: 14px;
@@ -334,13 +368,15 @@ const downloadDo = (fileId) => {
 .quick-panel {
   position: absolute;
   width: 50px;
-  top:150px;
+  top: 150px;
   text-align: center;
+
   .el-badge__content.is-fixed {
     top: 5px;
     right: 15px;
   }
-  .quick-item{
+
+  .quick-item {
     width: 50px;
     height: 50px;
     display: flex;
@@ -350,11 +386,13 @@ const downloadDo = (fileId) => {
     background: #fff;
     margin-bottom: 30px;
     cursor: pointer;
-    .iconfont{
+
+    .iconfont {
       font-size: 20px;
       color: var(--text2);
     }
-    .have-like{
+
+    .have-like {
       color: #DD4A68;
     }
   }

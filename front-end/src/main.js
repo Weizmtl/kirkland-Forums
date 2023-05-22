@@ -22,6 +22,8 @@ import Avatar from "@/components/Avatar.vue"
 import Cover from "@/components/Cover.vue"
 import DataList from "@/components/DataList.vue"
 import NoData from "@/components/NoData.vue"
+import ImageViewer from "@/components/ImageViewer.vue"
+
 const app = createApp(App)
 
 app.use(router)
@@ -44,5 +46,7 @@ app.component("Avatar", Avatar);
 app.component("Cover", Cover);
 app.component("DataList", DataList);
 app.component("NoData", NoData);
+app.component("ImageViewer", ImageViewer);
+
 app.mount('#app')
 
