@@ -56,7 +56,9 @@
           <div class="item">Required<span class="integral">{{ attachment.integral }}</span>points</div>
           <div class="download-count item">Downloaded{{ attachment.downloadCount }}times</div>
           <div class="download-btn item">
-            <el-button type="primary" size="small">download</el-button>
+            <el-button type="primary" size="small" @click="downloadAttachment(attachment.fileId)">
+              Download
+            </el-button>
           </div>
         </div>
       </div>
@@ -101,7 +103,11 @@ const store = useStore();
 const api = {
   getArticleDetail: "/forum/getArticleDetail",
   doLike: "/forum/doLike",
+  getUserDownloadInfo: "/forum/getUserDownloadInfo",
+  attachmentDownload: "/api/forum/attachmentDownload",
+
 };
+const currentUserInfo = ref({});
 // article content
 const articleInfo = ref({});
 // article attachment
@@ -155,6 +161,58 @@ const doLikeHandler = async () => {
     goodCount = -1;
   }
   articleInfo.value.goodCount = articleInfo.value.goodCount + goodCount;
+};
+
+//download attachment
+const downloadAttachment = async (fileId) => {
+  if (!currentUserInfo.value) {
+    store.commit("showLogin", true);
+    return;
+  }
+  // 0 credit
+  if (
+      attachment.value.integral == 0 ||
+      currentUserInfo.value.userId == articleInfo.value.userId
+  ) {
+    downloadDo(fileId);
+    return;
+  }
+
+  //Obtain user download information
+  let result = await proxy.Request({
+    url: api.getUserDownloadInfo,
+    params: {
+      fileId: fileId,
+    },
+  });
+  if (!result) {
+    return;
+  }
+  //Determine whether the user has downloaded it already.
+  if (result.data.haveDownload) {
+    downloadDo(fileId);
+    return;
+  }
+
+  //Determine whether the user credits are enough
+  if (result.data.userIntegral < attachment.value.integral) {
+    proxy.Message.warning("You don't have enough credits to download");
+    return;
+  }
+
+  proxy.Confirm(
+      `you have ${result.data.userIntegral}credits,
+      The current download will be deducted${attachment.value.integral}credits,
+      do you want to download`,
+      () => {
+        downloadDo(fileId);
+      }
+  );
+};
+
+const downloadDo = (fileId) => {
+  document.location.href = api.attachmentDownload + "?fileId=" + fileId;
+  attachment.value.downloadCount = attachment.value.downloadCount + 1;
 };
 
 </script>
