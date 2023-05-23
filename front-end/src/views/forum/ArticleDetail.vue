@@ -63,7 +63,15 @@
         </div>
       </div>
       <!--        comment-->
-      <div class="comment-panel" id="view-comment"></div>
+      <div class="comment-panel" id="view-comment">
+        <CommentList
+            v-if="articleInfo.articleId"
+            :articleId="articleInfo.articleId"
+            :articleUserId="articleInfo.userId">
+
+        </CommentList>
+      </div>
+
     </div>
 
   </div>
@@ -93,6 +101,7 @@
 <script setup>
 import hljs from "highlight.js";
 import "highlight.js/styles/atom-one-light.css";
+import CommentList from "./CommentList.vue";
 import {ref, reactive, getCurrentInstance, onMounted, nextTick, onUnmounted, watch,} from "vue";
 import {useRouter, useRoute} from "vue-router";
 import {useStore} from "vuex";
@@ -131,6 +140,8 @@ const getArticleDetail = async (articleId) => {
   articleInfo.value = result.data.forumArticle;
   attachment.value = result.data.attachment;
   haveLike.value = result.data.haveLike;
+  store.commit("setActivePboardId", result.data.forumArticle.pBoardId);
+  store.commit("setActiveBoardId", result.data.forumArticle.boardId);
 
   //image preview
   imagePreview();
@@ -258,8 +269,10 @@ const highlightCode = () => {
 
 .article-detail-body {
   position: relative;
+
   .board-info {
     line-height: 40px;
+
     .icon-right {
       margin: 0px 10px;
     }
@@ -269,34 +282,43 @@ const highlightCode = () => {
     .article-detail {
       background: #fff;
       padding: 15px;
+
       .title {
         font-weight: bolder;
       }
+
       .user-info {
         margin-top: 15px;
         display: flex;
         padding-bottom: 10px;
         border-bottom: 1px solid #ddd;
+
         .user-info-detail {
           margin-left: 10px;
+
           .nick-name {
             text-decoration: none;
             color: #4e5969;
             font-size: 15px;
           }
+
           .nick-name:hover {
             color: var(--link);
           }
+
           .time-info {
             margin-top: 5px;
             font-size: 13px;
             color: var(--text2);
+
             .iconfont {
               margin-left: 10px;
             }
+
             .iconfont::before {
               padding-right: 3px;
             }
+
             .btn-edit {
               .iconfont {
                 font-size: 14px;
@@ -359,6 +381,7 @@ const highlightCode = () => {
     .comment-panel {
       margin-top: 20px;
       background: #fff;
+      padding:20px;
     }
 
 
