@@ -54,7 +54,7 @@
           <div class="file-name item">{{ attachment.fileName }}</div>
           <div class="size item">{{ proxy.Utils.sizeToStr(attachment.fileSize) }}</div>
           <div class="item">Required<span class="integral">{{ attachment.integral }}</span>points</div>
-          <div class="download-count item">Downloaded{{ attachment.downloadCount }}times</div>
+          <div class="download-count item">Downloaded {{ attachment.downloadCount }} times</div>
           <div class="download-btn item">
             <el-button type="primary" size="small" @click="downloadAttachment(attachment.fileId)">
               Download

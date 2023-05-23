@@ -143,13 +143,14 @@ watch(
     .title {
       font-size: 16px;
       .count {
-        font-size: 14px;
+        font-size: 12px;
         padding: 0px 10px;
       }
     }
     .tab {
       .tab-item {
         cursor: pointer;
+        font-size: 14px;
       }
       .active {
         color: var(--link);
