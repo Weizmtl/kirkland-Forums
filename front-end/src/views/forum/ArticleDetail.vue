@@ -38,7 +38,7 @@
               <span>{{ articleInfo.postTime }}</span>
               <span class="address">&nbsp;·&nbsp;{{ articleInfo.userIpAddress }}</span>
               <span class="iconfont icon-eye-solid">
-                {{ articleInfo.readCount == 0 ? "阅读" : articleInfo.readCount }}
+                {{ articleInfo.readCount == 0 ? "Read" : articleInfo.readCount }}
               </span>
             </div>
           </div>
