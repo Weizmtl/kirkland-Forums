@@ -389,7 +389,7 @@ const highlightCode = () => {
 }
 
 .quick-panel {
-  position: absolute;
+  position: fixed;
   width: 50px;
   top: 150px;
   text-align: center;
