@@ -68,7 +68,7 @@
             v-if="articleInfo.articleId"
             :articleId="articleInfo.articleId"
             :articleUserId="articleInfo.userId">
-
+            @updateCommentCount="updateCommentCount"
         </CommentList>
       </div>
 
@@ -263,6 +263,12 @@ const highlightCode = () => {
     });
   });
 };
+
+// update comment quantity
+const updateCommentCount = (commentCount) => {
+  articleInfo.value.commentCount = commentCount;
+};
+
 </script>
 
 <style lang="scss">

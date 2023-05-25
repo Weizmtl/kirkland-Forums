@@ -134,7 +134,7 @@ const api = {
 };
 
 const emit = defineEmits(["hiddenAllReply", "reloadData"]);
-//显示评论框
+//display comment box
 const pCommentId = ref(0);
 const replyUserId = ref(null);
 const placeholderInfo = ref(null);
@@ -163,7 +163,7 @@ const postCommentFinish = (resultData) => {
 const gotoUcenter = (userId) => {
   router.push(`/user/${userId}`);
 };
-//点赞
+//like
 const doLike = async (data) => {
   let result = await proxy.Request({
     url: api.doLike,
@@ -179,7 +179,7 @@ const doLike = async (data) => {
   data.likeType = result.data.likeType;
 };
 
-//置顶
+//top
 const opTop = async (data) => {
   let result = await proxy.Request({
     url: api.changeTopType,

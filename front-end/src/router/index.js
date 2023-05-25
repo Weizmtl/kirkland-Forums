@@ -24,6 +24,14 @@ const router = createRouter({
         name: "Article Detail",
         component: () => import('@/views/forum/ArticleDetail.vue'),
       },{
+        path: '/newPost',
+        name: "Post Article",
+        component: () => import('@/views/forum/EditPost.vue'),
+      },{
+        path: '/editPost/:articleId',
+        name: "Edit Article",
+        component: () => import('@/views/forum/EditPost.vue'),
+      },{
         path: '/user/:userId',
         name: "user information",
         component: () => import('@/views/ucenter/Ucenter.vue'),

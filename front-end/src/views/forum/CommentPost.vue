@@ -36,7 +36,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <div class="send-btn" @click="postCommentDo">发表</div>
+    <div class="send-btn" @click="postCommentDo">Post</div>
   </div>
 </template>
 
@@ -75,7 +75,7 @@ const props = defineProps({
   },
 });
 
-//form信息
+//form info
 
 const checkPostComment = (rule, value, callback) => {
   if (value == null && formData.value.image == null) {
@@ -90,7 +90,7 @@ const formDataRef = ref();
 const rules = {
   content: [
     { required: true, message: "Please enter your comments", validator: checkPostComment },
-    { min: 5, message: "Comment at least 5 words" },
+    { min: 5, message: "Comment at least 5 letters" },
   ],
 };
 
@@ -118,7 +118,7 @@ const postCommentDo = () => {
   });
 };
 
-//选择图片
+//select image
 const commentImg = ref(null);
 const selectImg = (file) => {
   file = file.file;
@@ -145,7 +145,7 @@ const removeCommentImg = () => {
     flex: 1;
     margin: 0px 10px;
     .el-textarea__inner {
-      height: 60px;
+      height: 80px;
     }
     .insert-img {
       line-height: normal;

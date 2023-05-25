@@ -43,7 +43,7 @@
         <!-- login and register panel -->
         <div class="user-info-panel">
           <div class="op-btn">
-            <el-button type="primary" class="op-btn">
+            <el-button type="primary" class="op-btn" @click="newPost">
               Post<span class="= iconfont icon-add"></span>
             </el-button>
             <el-button type="primary" calss="op-btn">
@@ -272,6 +272,15 @@ watch(
     },
     {immediate: true, deep: true}
 );
+
+//Post article
+const newPost =()=>{
+  if(!store.getters.getLoginUserInfo){
+      loginAndRegister();
+  }else {
+    router.push('/newPost');
+  }
+}
 </script>
 
 <style lang="scss">
