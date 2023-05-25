@@ -23,6 +23,8 @@ import Cover from "@/components/Cover.vue"
 import DataList from "@/components/DataList.vue"
 import NoData from "@/components/NoData.vue"
 import ImageViewer from "@/components/ImageViewer.vue"
+import EditorHtml from "@/components/EditorHtml.vue"
+import EditorMarkdown from "@/components/EditorMarkdown.vue"
 
 const app = createApp(App)
 
@@ -47,6 +49,8 @@ app.component("Cover", Cover);
 app.component("DataList", DataList);
 app.component("NoData", NoData);
 app.component("ImageViewer", ImageViewer);
+app.component("EditorHtml", EditorHtml);
+app.component("EditorMarkdown", EditorMarkdown);
 
 app.mount('#app')
 

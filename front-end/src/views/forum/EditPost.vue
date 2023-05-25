@@ -12,6 +12,7 @@
           <template #header>
             <span>Text</span>
           </template>
+          <EditorMarkdown></EditorMarkdown>
         </el-card>
       </div>
       <div class="post-setting">
@@ -79,6 +80,7 @@
 <script setup>
 import {ref, reactive, getCurrentInstance, watch, nextTick} from "vue";
 import {useRouter, useRoute} from "vue-router";
+import EditorMarkdown from "@/components/EditorMarkdown.vue";
 
 const {proxy} = getCurrentInstance();
 const router = useRouter();
