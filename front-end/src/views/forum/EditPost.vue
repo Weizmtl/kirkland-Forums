@@ -12,7 +12,11 @@
           <template #header>
             <span>Text</span>
           </template>
-          <EditorMarkdown></EditorMarkdown>
+<!--          <EditorMarkdown
+              :height="markdownHeight">
+          </EditorMarkdown>-->
+          <EditorHtml
+              :height="htmlEditorHeight"></EditorHtml>
         </el-card>
       </div>
       <div class="post-setting">
@@ -20,58 +24,57 @@
           <template #header>
             <span>Setting</span>
           </template>
-
-          <el-form-item label="Title" prop="title">
-            <el-input
-                clearable
-                placeholder="Hint"
-                v-model="formData.title"
-            ></el-input>
-          </el-form-item>
-
-          <el-form-item label="Boards" prop="boardIds">
-            <el-cascader
-                placeholder="Please select board"
-                :options="boardList"
-                :props="boardProps"
-                clearable
-                v-model="formData.boardIds"
-                :style="{ width: '100%' }"
-            />
-          </el-form-item>
-
-          <el-form-item label="Cover" prop="cover">
-            <CoverUpload v-model="formData.cover"></CoverUpload>
-          </el-form-item>
-
-          <el-form-item label="Summary" prop="summary">
-            <el-input
-                clearable
-                placeholder="Hint"
-                type="textarea"
-                :rows="5"
-                :maxlength="200"
-                resize="none"
-                show-word-limit
-                v-model="formData.summary"
-            ></el-input>
-          </el-form-item>
-
-          <el-form-item label="Attachment" prop="cover">
-            <AttachmentSelector
-                v-model="formData.attachment"
-            ></AttachmentSelector>
-          </el-form-item>
-
-          <el-form-item label="" prop="">
-            <el-button
-                type="primary"
-                :style="{ width: '100%' }"
-                @click="postHandler"
-            >SAVE</el-button
-            >
-          </el-form-item>
-
+          <div class="setting-inner">
+            <!--input-->
+            <el-form-item label="Title" prop="title">
+              <el-input
+                  clearable
+                  :maxlength="150"
+                  placeholder=""
+                  v-model="formData.title"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="board" prop="boardIds">
+              <el-cascader
+                  placeholder="please select board"
+                  :options="boardList"
+                  :props="boardProps"
+                  clearable
+                  v-model="formData.boardIds"
+                  :style="{ width: '100%' }"
+              />
+            </el-form-item>
+            <el-form-item label="Cover" prop="cover">
+              <CoverUpload v-model="formData.cover"></CoverUpload>
+            </el-form-item>
+            <!--textarea-->
+            <el-form-item label="Summary" prop="summary">
+              <el-input
+                  clearable
+                  placeholder=""
+                  type="textarea"
+                  :rows="5"
+                  :maxlength="200"
+                  resize="none"
+                  show-word-limit
+                  v-model="formData.summary"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="attachment" prop="cover">
+              <AttachmentSelector
+                  v-model="formData.attachment"
+              ></AttachmentSelector>
+            </el-form-item>
+            <!--input-->
+            <el-form-item label="" prop="">
+              <el-button
+                  type="primary"
+                  :style="{ width: '100%' }"
+                  @click="postHandler"
+              >Save</el-button
+              >
+            </el-form-item>
+          </div>
         </el-card>
       </div>
     </el-form>
@@ -86,12 +89,41 @@ const {proxy} = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
 
+const markdownHeight = window.innerHeight - 80 - 60;
+const htmlEditorHeight = window.innerHeight - 80 - 120;
+
+const api = {
+  loadBoard: "/forum/loadBoard4Post",
+  postArticle: "/forum/postArticle",
+  articleDetail4Update: "/forum/articleDetail4Update",
+  updateArticle: "/forum/updateArticle",
+};
 
 const formData = ref({});
 const formDataRef = ref();
 const rules = {
   title: [{required: true, message: "Please input article title"}],
 };
+
+
+//board info
+const boardProps = {
+  multiple: false,
+  checkStrictly: true,
+  value: "boardId",
+  label: "boardName",
+};
+const boardList = ref([]);
+const loadBardList = async () => {
+  let result = await proxy.Request({
+    url: api.loadBoard,
+  });
+  if (!result) {
+    return;
+  }
+  boardList.value = result.data;
+};
+loadBardList();
 </script>
 
 <style lang="scss">
@@ -103,10 +135,32 @@ const rules = {
     }
     .post-editor {
       flex: 1;
+      .post-editor-title {
+        display: flex;
+        justify-content: space-between;
+        .change-editor-type {
+          .iconfont {
+            cursor: pointer;
+            color: var(--link);
+            font-size: 14px;
+          }
+        }
+      }
     }
     .post-setting {
       margin-left: 10px;
       width: 450px;
+      .setting-inner {
+        max-height: calc(100vh - 120px);
+        overflow: auto;
+        .el-form-item {
+          align-items: flex-start;
+        }
+      }
+      .tips {
+        color: #797979;
+        font-size: 13px;
+      }
     }
   }
 }
