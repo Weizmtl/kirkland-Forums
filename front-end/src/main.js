@@ -25,6 +25,7 @@ import NoData from "@/components/NoData.vue"
 import ImageViewer from "@/components/ImageViewer.vue"
 import EditorHtml from "@/components/EditorHtml.vue"
 import EditorMarkdown from "@/components/EditorMarkdown.vue"
+import CoverUpload from "@/components/CoverUpload.vue"
 
 const app = createApp(App)
 
@@ -51,6 +52,7 @@ app.component("NoData", NoData);
 app.component("ImageViewer", ImageViewer);
 app.component("EditorHtml", EditorHtml);
 app.component("EditorMarkdown", EditorMarkdown);
+app.component("CoverUpload", CoverUpload);
 
 app.mount('#app')
 
