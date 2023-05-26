@@ -44,10 +44,55 @@ const toolbarConfig = {
     "uploadVideo",
   ],
 };
+
+const editorConfig = {
+  placeholder: "please input content...",
+  excludeKeys: ["uploadVideo"],
+  MENU_CONF: {
+    uploadImage: {
+      maxFileSize: 3 * 1024 * 1024,
+      server: "/api/file/uploadImage",
+      fieldName: "file",
+      customInsert(responseData, insertFn) {
+        //regular request
+        if (responseData.code == 200) {
+          insertFn(
+              proxy.globalInfo.imageUrl + responseData.data.fileName,
+              "",
+              ""
+          );
+          return;
+        } else if (responseData.code == 901) {
+          //Login timeout
+          store.commit("showLogin", true);
+          store.commit("updateLoginUserInfo", null);
+          return;
+        }
+        proxy.Message.error(responseData.info);
+      },
+    },
+  },
+};
+
+const emit = defineEmits();
+const onChange = (editor) => {
+  emit("update:modelValue", editor.getHtml());
+};
+
+// When the component is destroyed, the editor is also destroyed
+onBeforeUnmount(() => {
+  const editor = editorRef.value;
+  if (editor == null) return;
+  editor.destroy();
+});
+
+const handleCreated = (editor) => {
+  editorRef.value = editor; // 记录 editor 实例，重要！
+};
 </script>
-
-
-
-<style scoped lang="scss">
-
+<style lang="scss">
+.editor-html {
+  border: 1px solid #ddd;
+  z-index: 1001; //这里不能太大，比导航条大1就可以了，太大会把element弹窗遮住
+}
 </style>
