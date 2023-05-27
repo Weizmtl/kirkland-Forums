@@ -5,7 +5,7 @@
         :rules="rules"
         ref="formDataRef"
         class="post-panel"
-        label-width="60px"
+        label-width="90px"
     >
       <div class="post-editor">
         <el-card :body-style="{ padding: '5px' }">
@@ -60,7 +60,7 @@
                   v-model="formData.summary"
               ></el-input>
             </el-form-item>
-            <el-form-item label="attachment" prop="cover">
+            <el-form-item label="Attachment" prop="cover">
               <AttachmentSelector
                   v-model="formData.attachment"
               ></AttachmentSelector>
@@ -154,7 +154,7 @@ loadBardList();
         max-height: calc(100vh - 120px);
         overflow: auto;
         .el-form-item {
-          align-items: flex-start;
+          align-items:flex-start;
         }
       }
       .tips {
