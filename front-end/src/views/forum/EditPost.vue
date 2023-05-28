@@ -10,11 +10,20 @@
       <div class="post-editor">
         <el-card :body-style="{ padding: '5px' }">
           <template #header>
-            <span>Text</span>
+            <div class="post-editor-title">
+            <span>TEXT</span>
+              <div class="change-editor-type">
+                <span class="iconfont icon-change" @click="changeEditor">
+                  Toggle  {{
+                    editorType == 0 ? "markdown editor" : "Html editor"
+                  }}
+                </span>
+              </div>
+            </div>
           </template>
-<!--          <EditorMarkdown
+          <EditorMarkdown
               :height="markdownHeight">
-          </EditorMarkdown>-->
+          </EditorMarkdown>
           <EditorHtml
               :height="htmlEditorHeight"></EditorHtml>
         </el-card>
@@ -70,7 +79,6 @@
               <el-button
                   type="primary"
                   :style="{ width: '100%' }"
-                  @click="postHandler"
               >Save</el-button
               >
             </el-form-item>
@@ -124,6 +132,18 @@ const loadBardList = async () => {
   boardList.value = result.data;
 };
 loadBardList();
+
+// Editor type 0: html editor 1:markdown
+const editorType = ref(null);
+const changeEditor = () => {
+  proxy.Confirm("The toggle editor will empty the content being edited. Are you sure you want to toggle?", () => {
+    editorType.value = editorType.value == 0 ? 1 : 0;
+    formData.value.content = "";
+    formData.value.markdownContent = "";
+    proxy.VueCookies.set("editorType", editorType.value, -1);
+  });
+};
+
 </script>
 
 <style lang="scss">
