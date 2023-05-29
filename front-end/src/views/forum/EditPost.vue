@@ -21,11 +21,20 @@
               </div>
             </div>
           </template>
-          <EditorMarkdown
-              :height="markdownHeight">
-          </EditorMarkdown>
-          <EditorHtml
-              :height="htmlEditorHeight"></EditorHtml>
+          <el-form-item prop="content" label-width="0">
+            <EditorHtml
+                :height="htmlEditorHeight"
+                v-if="editorType == 0"
+                v-model="formData.content"
+            ></EditorHtml>
+            <EditorMarkdown
+                :height="markdownHeight"
+                v-if="editorType == 1"
+                v-model="formData.markdownContent"
+                @htmlContent="setHtmlContent"
+            >
+            </EditorMarkdown>
+          </el-form-item>
         </el-card>
       </div>
       <div class="post-setting">
@@ -106,6 +115,32 @@ const api = {
   articleDetail4Update: "/forum/articleDetail4Update",
   updateArticle: "/forum/updateArticle",
 };
+
+const articleId = ref(null);
+const getArticleDetail = () => {
+  nextTick(async () => {
+    formDataRef.value.resetFields();
+    if (articleId.value) {
+      //edit
+    }else{
+      //create new
+    }
+  })
+}
+
+
+watch(
+    () => route,
+    (newVal, oldVal) => {
+      if (
+          newVal.path.indexOf("/editPost") != -1 ||
+          newVal.path.indexOf("/newPost") != -1
+      ) {
+        articleId.value = newVal.params.articleId;
+        getArticleDetail();
+      }
+    },
+);
 
 const formData = ref({});
 const formDataRef = ref();
