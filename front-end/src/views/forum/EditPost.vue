@@ -21,6 +21,7 @@
               </div>
             </div>
           </template>
+
           <el-form-item prop="content" label-width="0">
             <EditorHtml
                 :height="htmlEditorHeight"
@@ -102,6 +103,7 @@
               <el-button
                   type="primary"
                   :style="{ width: '100%' }"
+                  @click="postHandler"
               >Save</el-button
               >
             </el-form-item>
@@ -182,6 +184,10 @@ const getArticleDetail = () => {
   });
 };
 
+//Sets the html text information for the markdown editor
+const setHtmlContent = (htmlContent) => {
+  formData.value.content = htmlContent;
+};
 
 watch(
     () => route,
@@ -199,9 +205,65 @@ watch(
 const formData = ref({});
 const formDataRef = ref();
 const rules = {
-  title: [{required: true, message: "Please input article title"}],
+  title: [{ required: true, message: "please input article title" }],
+  boardIds: [{ required: true, message: "please select board" }],
+  content: [{ required: true, message: "plaese input text" }],
+  integral: [
+    { required: true, message: "please input credits for download" },
+    { validator: proxy.Verify.number, message: "credits only numbers" },
+  ],
 };
 
+//post article
+const postHandler = () => {
+  formDataRef.value.validate(async (valid) => {
+    if (!valid) {
+      return;
+    }
+    let params = {};
+    Object.assign(params, formData.value);
+    //config board id
+    if (params.boardIds.length == 1) {
+      params.pBoardId = params.boardIds[0];
+    } else if (params.boardIds.length == 2) {
+      params.pBoardId = params.boardIds[0];
+      params.boardId = params.boardIds[1];
+    }
+    delete params.boardIds;
+    //config editor type
+    params.editorType = editorType.value;
+    //Obtain content
+    const contentText = params.content.replace(/<(?!img).*?>/g, "");
+    if (contentText == "") {
+      proxy.message.warning("The text cannot be empty\n");
+      return;
+    }
+    if (params.attachment != null) {
+      params.attachmentType == 1;
+    } else {
+      params.attachmentType = 0;
+    }
+
+    //cover
+    if (!(params.cover instanceof File)) {
+      delete params.cover;
+    }
+
+    if (!(params.attachment instanceof File)) {
+      delete params.attachment;
+    }
+
+    let result = await proxy.Request({
+      url: params.articleId ? api.updateArticle : api.postArticle,
+      params: params,
+    });
+    if (!result) {
+      return;
+    }
+    proxy.Message.success("save successfully");
+    router.push(`/post/${result.data}`);
+  });
+};
 
 //board info
 const boardProps = {
