@@ -83,6 +83,20 @@
                   v-model="formData.attachment"
               ></AttachmentSelector>
             </el-form-item>
+
+            <el-form-item
+                label="Credits"
+                prop="integral"
+                v-if="formData.attachment"
+            >
+              <el-input
+                  clearable
+                  placeholder="please input credits"
+                  v-model="formData.integral"
+              ></el-input>
+              <span class="tips">0 means no credits download</span>
+            </el-form-item>
+
             <!--input-->
             <el-form-item label="" prop="">
               <el-button
@@ -121,12 +135,52 @@ const getArticleDetail = () => {
   nextTick(async () => {
     formDataRef.value.resetFields();
     if (articleId.value) {
-      //edit
-    }else{
-      //create new
+      //modify
+      let result = await proxy.Request({
+        url: api.articleDetail4Update,
+        params: {
+          articleId: articleId.value,
+        },
+        showError: false,
+        errorCallback: (response) => {
+          ElMessageBox.alert(response.info, "Error", {
+            "show-close": false,
+            callback: (action) => {
+              router.go(-1);
+            },
+          });
+        },
+      });
+      if (!result) {
+        return;
+      }
+      let articleInfo = result.data.forumArticle;
+      //config editor
+      editorType.value = articleInfo.editorType;
+      //config board info
+      articleInfo.boardIds = [];
+      articleInfo.boardIds.push(articleInfo.pBoardId);
+      if (articleInfo.boardId != null && articleInfo.boardId != 0) {
+        articleInfo.boardIds.push(articleInfo.boardId);
+      }
+      //config cover info
+      if (articleInfo.cover) {
+        articleInfo.cover = { imageUrl: articleInfo.cover };
+      }
+      //config attachment
+      if (result.data.attachment) {
+        articleInfo.attachment = {
+          name: result.data.attachment.fileName,
+        };
+        articleInfo.integral = result.data.attachment.integral;
+      }
+      formData.value = articleInfo;
+    } else {
+      formData.value = {};
+      editorType.value = proxy.VueCookies.get("editorType") || 0;
     }
-  })
-}
+  });
+};
 
 
 watch(
