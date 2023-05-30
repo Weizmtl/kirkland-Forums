@@ -43,6 +43,13 @@
               <span class="iconfont icon-eye-solid">
                 {{ articleInfo.readCount == 0 ? "Read" : articleInfo.readCount }}
               </span>
+              <router-link
+                  v-if="articleInfo.userId == currentUserInfo.userId"
+                  :to="`/editPost/${articleInfo.articleId}`"
+                  class="a-link btn-edit"
+              >
+                <span class="iconfont icon-edit">edit</span>
+              </router-link>
             </div>
           </div>
         </div>
@@ -172,6 +179,15 @@ const getArticleDetail = async (articleId) => {
   //Generate directory
   makeToc();
 };
+
+//listen login user
+watch(
+    () => store.state.loginUserInfo,
+    (newVal, oldVal) => {
+      currentUserInfo.value = newVal || {};
+    },
+    { immediate: true, deep: true }
+);
 
 onMounted(() => {
   getArticleDetail(route.params.articleId);
@@ -357,12 +373,12 @@ const getScrollTop = () => {
 
 onMounted(() => {
   window.addEventListener("scroll", listenerScroll, false);
-  window.addEventListener("resize", listenResize, false);
+
 });
 
 onUnmounted(() => {
   window.removeEventListener("scroll", listenerScroll, false);
-  window.removeEventListener("resize", listenResize, false);
+
 });
 </script>
 

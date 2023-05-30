@@ -116,7 +116,7 @@
 <script setup>
 import {ref, reactive, getCurrentInstance, watch, nextTick} from "vue";
 import {useRouter, useRoute} from "vue-router";
-import EditorMarkdown from "@/components/EditorMarkdown.vue";
+import { ElMessageBox } from "element-plus";
 
 const {proxy} = getCurrentInstance();
 const router = useRouter();
