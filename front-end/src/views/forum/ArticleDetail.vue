@@ -166,6 +166,8 @@ const getArticleDetail = async (articleId) => {
   imagePreview();
   //code highlighting
   highlightCode();
+  //Generate directory
+  makeToc();
 };
 
 onMounted(() => {
@@ -290,6 +292,31 @@ const updateCommentCount = (commentCount) => {
 
 //obtain menu
 const tocArray = ref([]);
+const makeToc = () => {
+  nextTick(() => {
+    const tocTags = ["H1", "H2", "H3", "H4", "H5", "H6"];
+    //Obtain all H tag
+    const contentDom = document.querySelector("#detail");
+    const childNodes = contentDom.childNodes;
+
+    let index = 0;
+    childNodes.forEach((item) => {
+      let tagName = item.tagName;
+      if (tagName == undefined || !tocTags.includes(tagName.toUpperCase())) {
+        return true;
+      }
+      index++;
+      let id = "toc" + index;
+      item.setAttribute("id", id);
+      tocArray.value.push({
+        id: id,
+        title: item.innerText,
+        level: Number.parseInt(tagName.substring(1)),
+        offsetTop: item.offsetTop,
+      });
+    });
+  });
+};
 
 </script>
 
