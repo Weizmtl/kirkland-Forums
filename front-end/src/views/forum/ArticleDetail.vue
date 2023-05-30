@@ -68,13 +68,32 @@
             v-if="articleInfo.articleId"
             :articleId="articleInfo.articleId"
             :articleUserId="articleInfo.userId">
-            @updateCommentCount="updateCommentCount"
+            @updateCommentCount="updateCommentCount">
         </CommentList>
       </div>
-
     </div>
-
-  </div>
+      <!--menu-->
+      <div class="toc-panel">
+        <div class="top-containner">
+          <div class="toc-title">menu</div>
+          <div class="toc-list">
+            <template v-if="tocArray.length == 0">
+              <div class="no-toc">not find menu</div>
+            </template>
+            <template v-else>
+              <div v-for="toc in tocArray">
+              <span
+                  @click="gotoAnchor(toc.id)"
+                  :class="['toc-item', toc.id == anchorId ? 'active' : '']"
+                  :style="{ 'padding-left': toc.level * 15 + 'px' }"
+              >{{ toc.title }}</span
+              >
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
+    </div>
   <!--      Left side shortcut-->
   <div class="quick-panel" :style="{left :quickPanelLeft + 'px'}">
     <!--    Like shortcut-->
@@ -269,6 +288,9 @@ const updateCommentCount = (commentCount) => {
   articleInfo.value.commentCount = commentCount;
 };
 
+//obtain menu
+const tocArray = ref([]);
+
 </script>
 
 <style lang="scss">
@@ -425,7 +447,59 @@ const updateCommentCount = (commentCount) => {
       color: #DD4A68;
     }
   }
+}
+.toc-panel {
+  position: absolute;
+  top: 45px;
+  right: 0px;
+  width: 285px;
 
+  .top-containner {
+    width: 285px;
+    position: fixed;
+    background: #fff;
+
+    .toc-title {
+      border-bottom: 1px solid #ddd;
+      padding: 10px;
+    }
+
+    .toc-list {
+      max-height: calc(100vh - 200px);
+      overflow: auto;
+      padding: 5px;
+
+      .no-toc {
+        text-align: center;
+        color: #5f5d5d;
+        line-height: 40px;
+        font-size: 13px;
+      }
+
+      .toc-item {
+        cursor: pointer;
+        display: block;
+        line-height: 35px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        color: #555666;
+        border-radius: 3px;
+        font-size: 14px;
+        border-left: 2px solid #fff;
+      }
+
+      .toc-item:hover {
+        background: #eeeded;
+      }
+
+      .active {
+        border-left: 2px solid #6ca1f7;
+        border-radius: 0px 3px 3px 0px;
+        background: #eeeded;
+      }
+    }
+  }
 }
 
 </style>
