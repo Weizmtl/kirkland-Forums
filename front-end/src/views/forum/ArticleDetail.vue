@@ -25,7 +25,10 @@
 
       <div class="article-detail">
         <!--        Title-->
-        <div class="title">{{ articleInfo.title }}</div>
+        <div class="title">
+          <span class="tag tag-no-audit" v-if="articleInfo.status == 0"
+          >to be review</span>
+          {{ articleInfo.title }}</div>
         <!--        user info-->
         <div class="user-info">
           <Avatar :userId="articleInfo.userId" :width="50"></Avatar>
@@ -318,6 +321,49 @@ const makeToc = () => {
   });
 };
 
+const anchorId = ref(null);
+const gotoAnchor = (domId) => {
+  const dom = document.querySelector("#" + domId);
+  dom.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
+};
+
+const listenerScroll = () => {
+  let currentScrollTop = getScrollTop();
+  tocArray.value.some((item, index) => {
+    if (
+        (index < tocArray.value.length - 1 &&
+            currentScrollTop >= tocArray.value[index].offsetTop &&
+            currentScrollTop < tocArray.value[index + 1].offsetTop) ||
+        (index == tocArray.value.length - 1 &&
+            currentScrollTop < tocArray.value[index].offsetTop)
+    ) {
+      anchorId.value = item.id;
+      return true;
+    }
+  });
+};
+
+//Gets the height of the scroll bar
+const getScrollTop = () => {
+  let scrollTop =
+      document.documentElement.scrollTop ||
+      window.pageYOffset ||
+      document.body.scrollTop;
+  return scrollTop;
+};
+
+onMounted(() => {
+  window.addEventListener("scroll", listenerScroll, false);
+  window.addEventListener("resize", listenResize, false);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("scroll", listenerScroll, false);
+  window.removeEventListener("resize", listenResize, false);
+});
 </script>
 
 <style lang="scss">
