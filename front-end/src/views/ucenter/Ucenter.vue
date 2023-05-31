@@ -12,7 +12,7 @@
         <div class="user-side">
           <!--Avatar info-->
           <div class="avatar-panel">
-            <div class="edit-btn a-link">Modify</div>
+            <div class="edit-btn a-link" v-if="isCurrentUser">Modify</div>
             <div class="avatar-inner">
               <Avatar :userId="userInfo.userId" :width="120"></Avatar>
             </div>
@@ -64,10 +64,11 @@
 <script setup>
 import { ref, reactive, getCurrentInstance, onMounted, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
-
+import { useStore } from "vuex";
 const { proxy } = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
+const store = useStore();
 
 const api = {
   getUserInfo: "/ucenter/getUserInfo",
@@ -94,6 +95,37 @@ const loadUserInfo = async () => {
   }
   userInfo.value = result.data;
 };
+
+const isCurrentUser = ref(false);
+//Reset the current user
+const resetCurrentUser = () => {
+  const loginUserInfo = store.getters.getLoginUserInfo;
+  if (loginUserInfo && loginUserInfo.userId === userId.value) {
+    isCurrentUser.value = true;
+  } else {
+    isCurrentUser.value = false;
+  }
+};
+
+watch(
+    () => store.state.loginUserInfo,
+    (newVal, oldVal) => {
+      resetCurrentUser();
+    },
+    { immediate: true, deep: true }
+);
+
+watch(
+    () => route.params.userId,
+    (newVal, oldVal) => {
+      if (newVal) {
+        userId.value = newVal;
+        resetCurrentUser();
+        loadUserInfo();
+      }
+    },
+    { immediate: true, deep: true }
+);
 </script>
 
 <style lang="scss" scoped>
