@@ -12,13 +12,7 @@
         <div class="user-side">
           <!--Avatar info-->
           <div class="avatar-panel">
-            <div
-                class="edit-btn a-link"
-                v-if="isCurrentUser"
-                @click="updateUserInfo"
-            >
-              Modify Profile
-            </div>
+            <div class="edit-btn a-link">Modify</div>
             <div class="avatar-inner">
               <Avatar :userId="userInfo.userId" :width="120"></Avatar>
             </div>
@@ -31,7 +25,38 @@
               {{ userInfo.personDescription }}
             </div>
           </div>
+<!--          extend info-->
+          <div class="user-extend-panel">
+            <div class="info-item">
+              <div class="label iconfont icon-integral">Credits</div>
+              <div
+                  class="value a-link"
+                  v-if="isCurrentUser"
+                  @click="showIntegralRecord"
+              >
+                {{ userInfo.currentIntegral }}
+              </div>
+              <div v-else class="value">{{ userInfo.currentIntegral }}</div>
+            </div>
+            <div class="info-item">
+              <div class="label iconfont icon-like">Liked</div>
+              <div class="value">{{ userInfo.likeCount }}</div>
+            </div>
+            <div class="info-item">
+              <div class="label iconfont icon-post">Posted</div>
+              <div class="value">{{ userInfo.postCount }}</div>
+            </div>
+            <div class="info-item">
+              <div class="label iconfont icon-register">Join</div>
+              <div class="value">{{ userInfo.joinTime }}</div>
+            </div>
+            <div class="info-item">
+              <div class="label iconfont icon-login">Last Land</div>
+              <div class="value">{{ userInfo.lastLoginTime }}</div>
+            </div>
+          </div>
         </div>
+        <div class="article-panel"></div>
       </div>
     </div>
 </template>
@@ -101,7 +126,45 @@ const loadUserInfo = async () => {
           display: flex;
           justify-content: center;
         }
+        .nick-name {
+          .iconfont {
+            margin-left: 5px;
+            color: var(--link);
+          }
+        }
+        .desc {
+          margin-top: 5px;
+          text-align: left;
+          font-size: 14px;
+          color: #929393;
+        }
       }
+      .user-extend-panel {
+        margin-top: 10px;
+        background: #fff;
+        padding: 10px;
+        .info-item {
+          display: flex;
+          justify-content: space-between;
+          line-height: 30px;
+          .label {
+            font-size: 13px;
+          }
+          .label::before {
+            font-size: 22px;
+            color: #888888;
+            padding-right: 5px;
+          }
+          .value {
+            font-size: 13px;
+          }
+        }
+      }
+    }
+    .article-panel {
+      flex: 1;
+      background: #fff;
+      padding: 0px 10px 10px 10px;
     }
   }
 }
