@@ -12,7 +12,12 @@
         <div class="user-side">
           <!--Avatar info-->
           <div class="avatar-panel">
-            <div class="edit-btn a-link" v-if="isCurrentUser">Modify</div>
+            <div
+                class="edit-btn a-link"
+                v-if="isCurrentUser"
+                @click="updateUserInfo"
+            >
+              Modify</div>
             <div class="avatar-inner">
               <Avatar :userId="userInfo.userId" :width="120"></Avatar>
             </div>
@@ -56,7 +61,14 @@
             </div>
           </div>
         </div>
-        <div class="article-panel"></div>
+        <div class="article-panel">
+          <el-tabs :model-value="activeTabName" @tab-change="changeTab">
+            <el-tab-pane label="Post" :name="0"></el-tab-pane>
+            <el-tab-pane label="Comment" :name="1"></el-tab-pane>
+            <el-tab-pane label="Like" :name="2"></el-tab-pane>
+          </el-tabs>
+        </div>
+
       </div>
     </div>
 </template>
@@ -96,6 +108,14 @@ const loadUserInfo = async () => {
   userInfo.value = result.data;
 };
 
+//right side article
+const activeTabName = ref(0);
+const changeTab = (type) => {
+  activeTabName.value = type;
+  loadArticle();
+};
+
+
 const isCurrentUser = ref(false);
 //Reset the current user
 const resetCurrentUser = () => {
@@ -126,6 +146,8 @@ watch(
     },
     { immediate: true, deep: true }
 );
+
+
 </script>
 
 <style lang="scss" scoped>
