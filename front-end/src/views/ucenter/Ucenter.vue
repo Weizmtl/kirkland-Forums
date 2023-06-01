@@ -67,6 +67,22 @@
             <el-tab-pane label="Comment" :name="1"></el-tab-pane>
             <el-tab-pane label="Like" :name="2"></el-tab-pane>
           </el-tabs>
+          <div class="article-list">
+            <DataList
+                :loading="loading"
+                :dataSource="articleListInfo"
+                @loadData="loadArticle"
+                noDataMsg="No related articles are available"
+            >
+              <template #default="{ data }">
+                <ArticleListItem
+                    :data="data"
+                    :showEdit="activeTabName == 0 && isCurrentUser"
+                    :showComment="showComment"
+                ></ArticleListItem>
+              </template>
+            </DataList>
+          </div>
         </div>
 
       </div>
@@ -114,7 +130,26 @@ const changeTab = (type) => {
   activeTabName.value = type;
   loadArticle();
 };
-
+const loading = ref(false);
+const articleListInfo = ref({});
+const loadArticle = async () => {
+  loading.value = true;
+  let params = {
+    pageNo: articleListInfo.value.pageNo,
+    type: activeTabName.value,
+    userId: userId.value,
+  };
+  let result = await proxy.Request({
+    url: api.loadUserArticle,
+    params: params,
+    showLoading: false,
+  });
+  loading.value = false;
+  if (!result) {
+    return;
+  }
+  articleListInfo.value = result.data;
+};
 
 const isCurrentUser = ref(false);
 //Reset the current user
