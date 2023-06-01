@@ -84,13 +84,18 @@
             </DataList>
           </div>
         </div>
-
       </div>
+      <!--modify user info-->
+      <UcenterEditUserInfo
+          ref="ucenterEditUserInfoRef"
+          @resetUserInfo="resetUserInfoHandler"
+      ></UcenterEditUserInfo>
     </div>
 </template>
 
 <script setup>
 import ArticleListItem from "@/views/forum/ArticleListItem.vue";
+import UcenterEditUserInfo from "./UcenterEditUserInfo.vue";
 import { ref, reactive, getCurrentInstance, onMounted, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
@@ -183,6 +188,12 @@ watch(
     },
     { immediate: true, deep: true }
 );
+
+//modify user info
+const ucenterEditUserInfoRef = ref(null);
+const updateUserInfo = () => {
+  ucenterEditUserInfoRef.value.showEditUserInfoDialog(userInfo.value);
+};
 
 const showComment = ref(false);
 </script>
