@@ -90,6 +90,7 @@
 </template>
 
 <script setup>
+import ArticleListItem from "@/views/forum/ArticleListItem.vue";
 import { ref, reactive, getCurrentInstance, onMounted, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
@@ -177,12 +178,13 @@ watch(
         userId.value = newVal;
         resetCurrentUser();
         loadUserInfo();
+        loadArticle();
       }
     },
     { immediate: true, deep: true }
 );
 
-
+const showComment = ref(false);
 </script>
 
 <style lang="scss" scoped>
