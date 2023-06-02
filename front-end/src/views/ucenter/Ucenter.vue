@@ -195,6 +195,10 @@ const updateUserInfo = () => {
   ucenterEditUserInfoRef.value.showEditUserInfoDialog(userInfo.value);
 };
 
+const resetUserInfoHandler = (data) => {
+  userInfo.value = data;
+};
+
 const showComment = ref(false);
 </script>
 
