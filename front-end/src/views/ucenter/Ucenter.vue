@@ -90,12 +90,15 @@
           ref="ucenterEditUserInfoRef"
           @resetUserInfo="resetUserInfoHandler"
       ></UcenterEditUserInfo>
+      <!--User credits record-->
+      <UserIntegralRecord ref="ucenterIntegralRecordRef"></UserIntegralRecord>
     </div>
 </template>
 
 <script setup>
 import ArticleListItem from "@/views/forum/ArticleListItem.vue";
 import UcenterEditUserInfo from "./UcenterEditUserInfo.vue";
+import UserIntegralRecord from "./UserIntegralRecord.vue";
 import { ref, reactive, getCurrentInstance, onMounted, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
@@ -197,6 +200,12 @@ const updateUserInfo = () => {
 
 const resetUserInfoHandler = (data) => {
   userInfo.value = data;
+};
+
+//Obtain user credit records
+const ucenterIntegralRecordRef = ref(null);
+const showIntegralRecord = () => {
+  ucenterIntegralRecordRef.value.showRecord();
 };
 
 const showComment = ref(false);
