@@ -71,7 +71,42 @@ const formData = ref({});
 const formDataRef = ref();
 
 const emit = defineEmits(["resetUserInfo"]);
+const updateUserInfoHandler = () => {
+  formDataRef.value.validate(async (valid) => {
+    if (!valid) {
+      return;
+    }
+    let params = {};
+    Object.assign(params, formData.value);
+    let result = await proxy.Request({
+      url: api.updateUserInfo,
+      params,
+    });
+    if (!result) {
+      return;
+    }
+    dialogConfig.show = false;
+    if (params.avatar instanceof File) {
+      router.go(0);
+    } else {
+      emit("resetUserInfo", params);
+    }
+  });
+};
 
+const showEditUserInfoDialog = (userInfo) => {
+  dialogConfig.show = true;
+  nextTick(() => {
+    formDataRef.value.resetFields();
+    const dataInfo = JSON.parse(JSON.stringify(userInfo));
+    dataInfo.avatar = {
+      imageUrl: dataInfo.userId,
+    };
+    formData.value = dataInfo;
+  });
+};
+
+defineExpose({ showEditUserInfoDialog });
 </script>
 
 
