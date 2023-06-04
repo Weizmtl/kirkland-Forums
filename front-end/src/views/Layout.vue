@@ -60,11 +60,21 @@
                 </el-badge>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item>Reply me</el-dropdown-item>
-                    <el-dropdown-item>Like me</el-dropdown-item>
-                    <el-dropdown-item>Download mine</el-dropdown-item>
-                    <el-dropdown-item>Like my comment</el-dropdown-item>
-                    <el-dropdown-item>System Message</el-dropdown-item>
+                    <el-dropdown-item
+                        @click="gotoMessage('reply')"
+                        class="message-item">Reply me</el-dropdown-item>
+                    <el-dropdown-item
+                        @click="gotoMessage('likePost')"
+                        class="message-item">Like me</el-dropdown-item>
+                    <el-dropdown-item
+                        @click="gotoMessage('downloadAttachment')"
+                        class="message-item">Download mine</el-dropdown-item>
+                    <el-dropdown-item
+                        @click="gotoMessage('likeComment')"
+                        class="message-item">Like my comment</el-dropdown-item>
+                    <el-dropdown-item
+                        @click="gotoMessage('sys')"
+                        class="message-item">System Message</el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
@@ -281,6 +291,23 @@ const newPost =()=>{
     router.push('/newPost');
   }
 }
+
+//message correlation methods
+const gotoMessage = (type) => {
+  router.push(`/user/message/${type}`);
+};
+
+const messageCountInfo = ref({});
+const loadMessageCount = async () => {
+  let result = await proxy.Request({
+    url: api.loadMessageCount,
+  });
+  if (!result) {
+    return;
+  }
+  messageCountInfo.value = result.data;
+  store.commit("updateMessageCountInfo", result.data);
+};
 </script>
 
 <style lang="scss">
