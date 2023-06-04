@@ -55,26 +55,76 @@
           <template v-if="userInfo.userId">
             <div class="message-info">
               <el-dropdown>
-                <el-badge :value="12" class="item">
+                <el-badge :value="messageCountInfo.total"
+                          class="item"
+                          :hidden="
+                    messageCountInfo.total == null ||
+                    messageCountInfo.total == 0
+                  ">
                   <div class="iconfont icon-message"></div>
                 </el-badge>
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item
                         @click="gotoMessage('reply')"
-                        class="message-item">Reply me</el-dropdown-item>
+                        class="message-item">
+                      <span class="text">Reply me</span>
+                      <span
+                          class="count-tag"
+                          v-if="messageCountInfo.reply > 0"
+                      >{{
+                          messageCountInfo.reply > 99
+                              ? "99+"
+                              : messageCountInfo.reply
+                        }}</span>
+                    </el-dropdown-item>
                     <el-dropdown-item
                         @click="gotoMessage('likePost')"
-                        class="message-item">Like me</el-dropdown-item>
+                        class="message-item">
+                      <span class="text">Like me</span>
+                      <span
+                          class="count-tag"
+                          v-if="messageCountInfo.likePost > 0"
+                      >{{
+                          messageCountInfo.likePost > 99
+                              ? "99+"
+                              : messageCountInfo.likePost
+                        }}</span>
+                    </el-dropdown-item>
                     <el-dropdown-item
                         @click="gotoMessage('downloadAttachment')"
-                        class="message-item">Download mine</el-dropdown-item>
+                        class="message-item">
+                      <span class="text">Download mine</span>
+                      <span
+                          class="count-tag"
+                          v-if="messageCountInfo.downloadAttachment > 0"
+                      >{{
+                          messageCountInfo.downloadAttachment > 99
+                              ? "99+"
+                              : messageCountInfo.downloadAttachment
+                        }}</span>
+                    </el-dropdown-item>
                     <el-dropdown-item
                         @click="gotoMessage('likeComment')"
-                        class="message-item">Like my comment</el-dropdown-item>
+                        class="message-item">
+                      <span class="text">Like my comment</span>
+                      <span class="count-tag" v-if="messageCountInfo.sys > 0">{{
+                          messageCountInfo.sys > 99 ? "99+" : messageCountInfo.sys
+                        }}</span>
+                    </el-dropdown-item>
                     <el-dropdown-item
                         @click="gotoMessage('sys')"
-                        class="message-item">System Message</el-dropdown-item>
+                        class="message-item">
+                      <span class="text">System Message</span>
+                      <span
+                          class="count-tag"
+                          v-if="messageCountInfo.likeComment > 0"
+                      >{{
+                          messageCountInfo.likeComment > 99
+                              ? "99+"
+                              : messageCountInfo.likeComment
+                        }}</span>
+                    </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
@@ -82,10 +132,14 @@
 
             <div class="user-info">
               <el-dropdown>
-                <avatar :userId="userInfo.userId" :width="50"></avatar>
+                <avatar
+                    :userId="userInfo.userId"
+                    :width="50"
+                    :addLink="false">
+                </avatar>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item>My Page</el-dropdown-item>
+                    <el-dropdown-item @click="gotoUcenter(userInfo.userId)">My Page</el-dropdown-item>
                     <el-dropdown-item>Logout</el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -127,6 +181,7 @@ const store = useStore();
 const api = {
   getUserInfo: "/getUserInfo",
   loadBoard: "/board/loadBoard",
+  loadMessageCount: "/ucenter/getMessageCount",
 }
 
 const logoInfo = ref([
@@ -284,18 +339,24 @@ watch(
 );
 
 //Post article
-const newPost =()=>{
-  if(!store.getters.getLoginUserInfo){
-      loginAndRegister();
-  }else {
+const newPost = () => {
+  if (!store.getters.getLoginUserInfo) {
+    loginAndRegister();
+  } else {
     router.push('/newPost');
   }
 }
+
+const gotoUcenter = (userId) => {
+  router.push(`/user/${userId}`);
+};
 
 //message correlation methods
 const gotoMessage = (type) => {
   router.push(`/user/message/${type}`);
 };
+
+
 
 const messageCountInfo = ref({});
 const loadMessageCount = async () => {
@@ -306,8 +367,8 @@ const loadMessageCount = async () => {
     return;
   }
   messageCountInfo.value = result.data;
-  store.commit("updateMessageCountInfo", result.data);
 };
+loadMessageCount();
 </script>
 
 <style lang="scss">
@@ -318,50 +379,62 @@ const loadMessageCount = async () => {
   box-shadow: 0 2px 6px 0 #ddd;
   z-index: 1000;
   background: #fff;
+
   .header-content {
     margin: 0px auto;
     align-items: center;
     height: 60px;
     display: flex;
     align-items: center;
+
     .logo {
       display: block;
       text-decoration: none;
       margin-right: 5px;
+
       span {
         font-size: 30px;
       }
     }
+
     .menu-panel {
       flex: 1;
+
       .menu-item {
         margin-left: 20px;
         cursor: pointer;
       }
+
       .home {
         text-decoration: none;
         color: #000;
       }
+
       .active {
         color: var(--link);
       }
     }
+
     .user-info-panel {
       width: 400px;
       display: flex;
       align-items: center;
+
       .op-btn {
         .iconfont {
           margin-left: 5px;
         }
+
         .el-button + .el-button {
           margin-left: 5px;
         }
       }
+
       .message-info {
         margin-left: 5px;
         margin-right: 25px;
         cursor: pointer;
+
         .icon-message {
           font-size: 25px;
           color: rgb(147, 147, 147);
@@ -374,6 +447,7 @@ const loadMessageCount = async () => {
 .sub-board-list {
   display: flex;
   flex-wrap: wrap;
+
   .sub-board {
     padding: 0px 10px;
     border-radius: 20px;
@@ -388,10 +462,12 @@ const loadMessageCount = async () => {
   .sub-board:hover {
     color: var(--link);
   }
+
   .active {
     background: var(--link);
     color: #fff;
   }
+
   .active:hover {
     color: #fff;
   }
@@ -423,19 +499,36 @@ const loadMessageCount = async () => {
   }
 }
 
+  .count-tag {
+    height: 15px;
+    line-height: 15px;
+    min-width: 20px;
+    display: inline-block;
+    background: #f56c6c;
+    border-radius: 10px;
+    font-size: 13px;
+    text-align: center;
+    color: #fff;
+    margin-left: 10px;
+  }
+
 .footer {
   background: #e9e9e9;
   height: 140px;
   margin-top: 10px;
+
   .footer-content {
     margin: 0px auto;
     padding-top: 10px;
+
     .item {
       text-align: left;
+
       .title {
         font-size: 18px;
         margin-bottom: 10px;
       }
+
       a {
         font-size: 14px;
         text-decoration: none;
@@ -448,6 +541,7 @@ const loadMessageCount = async () => {
       .logo-letter {
         font-size: 30px;
       }
+
       .info {
         margin-top: 10px;
         color: rgb(93, 91, 91);
