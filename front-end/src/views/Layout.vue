@@ -371,6 +371,16 @@ const loadMessageCount = async () => {
 };
 loadMessageCount();
 
+watch(
+    () => store.state.loginUserInfo,
+    (newVal, oldVal) => {
+      if (newVal) {
+        loadMessageCount();
+      }
+    },
+    { immediate: true, deep: true }
+);
+
 //Logout
 const logout = () => {
   proxy.Confirm("Do you want logout?", async () => {
