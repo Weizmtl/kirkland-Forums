@@ -368,8 +368,16 @@ const loadMessageCount = async () => {
     return;
   }
   messageCountInfo.value = result.data;
+  store.commit("updateMessageCountInfo", result.data);
 };
-loadMessageCount();
+
+watch(
+    () => store.state.messageCountInfo,
+    (newVal, oldVal) => {
+      messageCountInfo.value = newVal || {};
+    },
+    { immediate: true, deep: true }
+);
 
 watch(
     () => store.state.loginUserInfo,

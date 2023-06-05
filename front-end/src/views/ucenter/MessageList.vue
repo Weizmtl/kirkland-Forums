@@ -10,13 +10,67 @@
     </div>
     <div class="message-panel">
       <div class="tab-list">
-        <el-tabs :model-value="activeTabName" @tab-change="tabChange">
+        <el-tabs :model-value="activeTabName">
           <el-tab-pane name="reply">
             <template #label>
               <div class="tab-item">
                 <span>Reply me</span>
                 <span class="count-tag" v-if="messageCountInfo.reply > 0">{{
                     messageCountInfo.reply > 99 ? "99+" : messageCountInfo.reply
+                  }}</span>
+              </div>
+            </template>
+          </el-tab-pane>
+          <el-tab-pane name="likePost">
+            <template #label>
+              <div class="tab-item">
+                <span>Like me</span>
+                <span class="count-tag" v-if="messageCountInfo.likePost > 0">{{
+                    messageCountInfo.likePost > 99
+                        ? "99+"
+                        : messageCountInfo.likePost
+                  }}</span>
+              </div>
+            </template>
+          </el-tab-pane>
+          <el-tab-pane name="downloadAttachment">
+            <template #label>
+              <div class="tab-item">
+                <span>Download mine</span>
+                <span
+                    class="count-tag"
+                    v-if="messageCountInfo.downloadAttachment > 0"
+                >{{
+                    messageCountInfo.downloadAttachment > 99
+                        ? "99+"
+                        : messageCountInfo.downloadAttachment
+                  }}</span
+                >
+              </div>
+            </template>
+          </el-tab-pane>
+          <el-tab-pane name="likeComment">
+            <template #label>
+              <div class="tab-item">
+                <span>Like my comment</span>
+                <span
+                    class="count-tag"
+                    v-if="messageCountInfo.likeComment > 0"
+                >{{
+                    messageCountInfo.likeComment > 99
+                        ? "99+"
+                        : messageCountInfo.likeComment
+                  }}</span
+                >
+              </div>
+            </template>
+          </el-tab-pane>
+          <el-tab-pane name="sys">
+            <template #label>
+              <div class="tab-item">
+                <span>System message</span>
+                <span class="count-tag" v-if="messageCountInfo.sys > 0">{{
+                    messageCountInfo.sys > 99 ? "99+" : messageCountInfo.sys
                   }}</span>
               </div>
             </template>
@@ -36,6 +90,17 @@ const route = useRoute();
 const store = useStore();
 
 const activeTabName = ref("reply");
+
+
+const messageCountInfo = ref({});
+watch(
+    () => store.state.messageCountInfo,
+    (newVal, oldVal) => {
+      messageCountInfo.value = newVal || {};
+    },
+    { immediate: true, deep: true }
+);
+
 </script>
 <style scoped lang="scss">
 .message-center {
@@ -48,7 +113,9 @@ const activeTabName = ref("reply");
     }
   }
   .message-panel {
-
+    background: #fff;
+    padding: 10px;
+    margin-top: 5px;
      .tab-item {
         position: relative;
         padding: 0px 10px;

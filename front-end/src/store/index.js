@@ -13,6 +13,8 @@ export default createStore({
         activePboardId: 0,
         //current secondary board
         activeBoardId: 0,
+        //message amount
+        messageCountInfo: {},
     },
     getters: {
         getLoginUserInfo: (state) => {
@@ -31,7 +33,10 @@ export default createStore({
         },
         getActiveBoardId: (state) => {
             return state.activeBoardId;
-        }
+        },
+        getMessageCountInfo: (state) => {
+            return state.messageCountInfo;
+        },
     },
     mutations: {
         updateLoginUserInfo(state, value) {
@@ -47,6 +52,17 @@ export default createStore({
         }, setActiveBoardId: (state, value) => {
             state.activeBoardId = value;
         },
+        //config message amount
+        updateMessageCountInfo: (state, value) => {
+            state.messageCountInfo = value;
+        },
+        readMessage: (state, value) => {
+            state.messageCountInfo.total = state.messageCountInfo.total - state.messageCountInfo[value]
+            state.messageCountInfo[value] = 0;
+        },
+        saveSysSetting: (state, value) => {
+            state.sysSetting = value;
+        }
     },
     actions: {},
     modules: {},
