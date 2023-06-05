@@ -10,7 +10,7 @@
     </div>
     <div class="message-panel">
       <div class="tab-list">
-        <el-tabs :model-value="activeTabName">
+        <el-tabs :model-value="activeTabName" @tab-change="tabChange">
           <el-tab-pane name="reply">
             <template #label>
               <div class="tab-item">
@@ -76,6 +76,8 @@
             </template>
           </el-tab-pane>
         </el-tabs>
+        <router-link :to="`/user/${userId}`" class="a-link go-ucenter"
+        >&lt;&lt;个人中心</router-link>
       </div>
     </div>
   </div>
@@ -89,9 +91,38 @@ const router = useRouter();
 const route = useRoute();
 const store = useStore();
 
+const api = {
+  loadMessageList: "/ucenter/loadMessageList",
+};
+
 const activeTabName = ref("reply");
 
+const tabChange = (type) => {
+  router.push(`/user/message/${type}`);
+};
 
+const loading = ref(false);
+const messageListInfo = ref({});
+const loadMessage = async () => {
+  loading.value = true;
+  let params = {
+    pageNo: messageListInfo.value.pageNo,
+    code: activeTabName.value,
+  };
+  let result = await proxy.Request({
+    url: api.loadMessageList,
+    params: params,
+    showLoading: false,
+  });
+  loading.value = false;
+  if (!result) {
+    return;
+  }
+  messageListInfo.value = result.data;
+  store.commit("readMessage", activeTabName.value);
+};
+
+//message amount
 const messageCountInfo = ref({});
 watch(
     () => store.state.messageCountInfo,
