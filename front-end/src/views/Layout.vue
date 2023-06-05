@@ -140,7 +140,7 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="gotoUcenter(userInfo.userId)">My Page</el-dropdown-item>
-                    <el-dropdown-item>Logout</el-dropdown-item>
+                    <el-dropdown-item @click="logout">Logout</el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
@@ -182,6 +182,7 @@ const api = {
   getUserInfo: "/getUserInfo",
   loadBoard: "/board/loadBoard",
   loadMessageCount: "/ucenter/getMessageCount",
+  logout: "/logout",
 }
 
 const logoInfo = ref([
@@ -369,6 +370,20 @@ const loadMessageCount = async () => {
   messageCountInfo.value = result.data;
 };
 loadMessageCount();
+
+//Logout
+const logout = () => {
+  proxy.Confirm("Do you want logout?", async () => {
+    let result = await proxy.Request({
+      url: api.logout,
+    });
+    if (!result) {
+      return;
+    }
+    store.commit("updateLoginUserInfo", null);
+  });
+};
+
 </script>
 
 <style lang="scss">
