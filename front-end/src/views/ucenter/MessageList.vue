@@ -79,7 +79,26 @@
         <router-link :to="`/user/${userId}`" class="a-link go-ucenter"
         >&lt;&lt;User Center</router-link>
       </div>
+
+      <div class="message-list">
+        <DataList
+            :loading="loading"
+            :dataSource="messageListInfo"
+            @loadData="loadMessage"
+            noDataMsg="No more news"
+        >
+          <template #default="{ data }">
+            <!--system message-->
+            <div class="message-item" v-if="data.messageType == 0">
+              <div class="message-content">
+                <span v-html="data.messageContent"></span>
+                <span class="create-time">{{ data.createTime }}</span>
+              </div>
+            </div>
+          </template>
+        </DataList>
     </div>
+  </div>
   </div>
 </template>
 <script setup>
@@ -197,6 +216,23 @@ watch(
         top: 5px;
         right: 10px;
         font-size: 14px;
+      }
+    }
+    .message-list {
+      .message-item {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 14px;
+        border-bottom: 1px solid #ddd;
+        padding: 10px;
+        .message-content {
+          margin-left: 5px;
+          .create-time {
+            color: #9ba7b9;
+            margin-left: 10px;
+          }
+        }
       }
     }
   }
