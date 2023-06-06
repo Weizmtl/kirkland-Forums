@@ -95,6 +95,43 @@
                 <span class="create-time">{{ data.createTime }}</span>
               </div>
             </div>
+            <!--reply me-->
+            <div class="message-item" v-if="data.messageType == 1">
+              <Avatar :userId="data.sendUserId" :width="50"></Avatar>
+              <div class="message-content">
+                <div>
+                  <router-link class="a-link" :to="`/user/${data.sendUserId}`"
+                  >@{{ data.sendNickName }}</router-link
+                  >
+                  On my article【<router-link
+                    class="a-link"
+                    :to="`/post/${data.articleId}`"
+                >{{ data.articleTitle }}</router-link
+                >】made a comment
+                  <span class="create-time">{{ data.createTime }}</span>
+                </div>
+                <div class="reply-content" v-html="data.messageContent"></div>
+              </div>
+            </div>
+
+            <!--like my comment-->
+            <div class="message-item" v-if="data.messageType == 3">
+              <Avatar :userId="data.sendUserId" :width="50"></Avatar>
+              <div class="message-content">
+                <div>
+                  <router-link class="a-link" :to="`/user/${data.sendUserId}`"
+                  >@{{ data.sendNickName }}</router-link
+                  >
+                  In the article【<router-link
+                    class="a-link"
+                    :to="`/post/${data.articleId}`"
+                >{{ data.articleTitle }}</router-link
+                >】liked my comment
+                  <span class="create-time">{{ data.createTime }}</span>
+                </div>
+                <div class="reply-content" v-html="data.messageContent"></div>
+              </div>
+            </div>
           </template>
         </DataList>
     </div>
