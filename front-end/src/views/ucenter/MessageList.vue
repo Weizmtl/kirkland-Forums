@@ -77,7 +77,7 @@
           </el-tab-pane>
         </el-tabs>
         <router-link :to="`/user/${userId}`" class="a-link go-ucenter"
-        >&lt;&lt;个人中心</router-link>
+        >&lt;&lt;User Center</router-link>
       </div>
     </div>
   </div>
@@ -122,6 +122,28 @@ const loadMessage = async () => {
   store.commit("readMessage", activeTabName.value);
 };
 
+watch(
+    () => route.params.type,
+    (newVal, oldVal) => {
+      if (newVal) {
+        activeTabName.value = newVal;
+        loadMessage();
+      }
+    },
+    { immediate: true, deep: true }
+);
+//Monitor user information
+const userId = ref(null);
+watch(
+    () => store.state.loginUserInfo,
+    (newVal, oldVal) => {
+      if (newVal) {
+        userId.value = newVal.userId;
+      }
+    },
+    { immediate: true, deep: true }
+);
+
 //message amount
 const messageCountInfo = ref({});
 watch(
@@ -147,7 +169,11 @@ watch(
     background: #fff;
     padding: 10px;
     margin-top: 5px;
-     .tab-item {
+
+    .tab-list {
+      position: relative;
+
+      .tab-item {
         position: relative;
         padding: 0px 10px;
 
@@ -166,7 +192,14 @@ watch(
           margin-left: 10px;
         }
       }
+      .go-ucenter {
+        position: absolute;
+        top: 5px;
+        right: 10px;
+        font-size: 14px;
+      }
     }
   }
+}
 
 </style>
