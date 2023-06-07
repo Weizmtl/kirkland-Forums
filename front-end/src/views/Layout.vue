@@ -212,6 +212,7 @@ import {useStore} from "vuex";
 
 const {proxy} = getCurrentInstance();
 const router = useRouter();
+const route = useRoute();
 const store = useStore();
 
 const api = {
@@ -219,6 +220,7 @@ const api = {
   loadBoard: "/board/loadBoard",
   loadMessageCount: "/ucenter/getMessageCount",
   logout: "/logout",
+  getSysSetting: "/getSysSetting",
 }
 
 const logoInfo = ref([
@@ -437,6 +439,19 @@ const logout = () => {
     store.commit("updateLoginUserInfo", null);
   });
 };
+
+//Get system configuration
+const loadSysSetting = async () => {
+  let result = await proxy.Request({
+    url: api.getSysSetting,
+  });
+  if (!result) {
+    return;
+  }
+  store.commit("saveSysSetting", result.data);
+};
+
+
 
 </script>
 

@@ -15,6 +15,8 @@ export default createStore({
         activeBoardId: 0,
         //message amount
         messageCountInfo: {},
+        //system settings
+        sysSetting: {},
     },
     getters: {
         getLoginUserInfo: (state) => {
