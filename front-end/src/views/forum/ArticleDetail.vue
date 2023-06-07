@@ -73,7 +73,7 @@
         </div>
       </div>
       <!--        comment-->
-      <div class="comment-panel" id="view-comment">
+      <div class="comment-panel" id="view-comment" v-if="showComment && articleInfo.status == 1">
         <CommentList
             v-if="articleInfo.articleId"
             :articleId="articleInfo.articleId"
@@ -113,8 +113,8 @@
       </div>
     </el-badge>
     <!--      comment shortcut-->
-    <el-badge :value="articleInfo.commentCount" type="info" :hidden="!articleInfo.commentCount >0">
-      <div class="quick-item" @click="goToPosition('view-comment')">
+    <el-badge v-if="showComment" :value="articleInfo.commentCount" type="info" :hidden="!articleInfo.commentCount >0">
+      <div class="quick-item" @click="goToPosition('view-comment')" v-if="showComment">
         <span class="iconfont icon-comment"></span>
       </div>
     </el-badge>
@@ -380,6 +380,17 @@ onUnmounted(() => {
   window.removeEventListener("scroll", listenerScroll, false);
 
 });
+
+const showComment = ref(false);
+watch(
+    () => store.state.sysSetting,
+    (newVal, oldVal) => {
+      if (newVal) {
+        showComment.value = newVal.commentOpen;
+      }
+    },
+    { immediate: true, deep: true }
+);
 </script>
 
 <style lang="scss">

@@ -33,11 +33,17 @@
                         {{ data.commentCount == 0 ? "Comment" : data.commentCount }}
                     </span>
 
+          <span
+              class="iconfont icon-edit edit-btn"
+              v-if="showEdit"
+              @click="editArticle(data.articleId)"
+          >Edit</span
+          >
         </div>
       </div>
-      <router-link :to="`/post/${data.articleId}`">
-      <Cover :cover="data.cover" :width="100"></Cover>
-      </router-link>
+      <router-link :to="`/post/${data.articleId}`"
+      ><Cover :cover="data.cover" :width="100" v-if="data.cover"></Cover
+      ></router-link>
     </div>
   </div>
 </template>
@@ -48,9 +54,23 @@ import Cover from "@/components/Cover.vue";
 
 const props = defineProps({
   data: {
-    type: Object
+    type: Object,
+  },
+  showComment: {
+    type: Boolean,
+  },
+  showEdit: {
+    type: Boolean,
+  },
+  htmlTitle: {
+    type: Boolean,
+    default: false,
   },
 });
+
+const editArticle = (articleId) => {
+  router.push(`/editPost/${articleId}`);
+};
 </script>
 
 <style lang="scss">

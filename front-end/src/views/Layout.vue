@@ -212,7 +212,7 @@ import {useStore} from "vuex";
 
 const {proxy} = getCurrentInstance();
 const router = useRouter();
-const route = useRoute();
+
 const store = useStore();
 
 const api = {
@@ -450,7 +450,6 @@ const loadSysSetting = async () => {
   }
   store.commit("saveSysSetting", result.data);
 };
-
 
 
 </script>

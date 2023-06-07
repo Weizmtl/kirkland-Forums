@@ -23,7 +23,7 @@
         <DataList :loading="loading" :dataSource="articleListInfo" @loadData="loadArticle"
                   noDataMsg="Haven't found any yet. To be the first? ">
           <template #default="{data}">
-            <ArticleListItem :data="data"></ArticleListItem>
+            <ArticleListItem :data="data" :showComment="showComment"></ArticleListItem>
           </template>
         </DataList>
       </div>
@@ -111,6 +111,16 @@ watch(
     {immediate: true, deep: true}
 );
 
+const showComment = ref(false);
+watch(
+    () => store.state.sysSetting,
+    (newVal, oldVal) => {
+      if (newVal) {
+        showComment.value = newVal.commentOpen;
+      }
+    },
+    { immediate: true, deep: true }
+);
 
 </script>
 
