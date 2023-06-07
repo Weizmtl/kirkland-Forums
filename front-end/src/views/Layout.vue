@@ -160,7 +160,10 @@
         </div>
       </div>
     </div>
-    <div class="footer" v-if="showFooter">
+    <div class="body-content">
+      <router-view />
+    </div>
+    <div class="footer">
       <div
           class="footer-content"
           :style="{ width: proxy.globalInfo.bodyWidth + 'px' }"
@@ -179,10 +182,10 @@
           <el-col :span="6" class="item">
             <div class="title">Site-related</div>
             <div>
-              <a href="####">Site-related</a>
+              <a href="https://www.ville.kirkland.qc.ca/">Kirkland</a>
             </div>
-            <div><a href="####">Site-related</a></div>
-            <div><a href="####">Site-related</a></div>
+            <div><a href="https://www.pointe-claire.ca/en/">Pointe Claire</a></div>
+            <div><a href="https://www.beaconsfield.ca/en">Beaconsfield</a></div>
           </el-col>
           <el-col :span="6" class="item">
             <div class="title">Blogroll
@@ -194,11 +197,10 @@
         </el-row>
       </div>
     </div>
-    <div class="body-content">
-      <router-view/>
-    </div>
     <!-- login and register -->
     <LoginAndRegister ref="loginRegisterRef"></LoginAndRegister>
+    <!--back to top-->
+    <el-backtop :right="100" :bottom="100"></el-backtop>
   </div>
 </template>
 
@@ -566,36 +568,19 @@ const logout = () => {
   }
 }
 
-  .count-tag {
-    height: 15px;
-    line-height: 15px;
-    min-width: 20px;
-    display: inline-block;
-    background: #f56c6c;
-    border-radius: 10px;
-    font-size: 13px;
-    text-align: center;
-    color: #fff;
-    margin-left: 10px;
-  }
-
 .footer {
   background: #e9e9e9;
   height: 140px;
   margin-top: 10px;
-
   .footer-content {
     margin: 0px auto;
     padding-top: 10px;
-
     .item {
       text-align: left;
-
       .title {
         font-size: 18px;
         margin-bottom: 10px;
       }
-
       a {
         font-size: 14px;
         text-decoration: none;
@@ -608,7 +593,6 @@ const logout = () => {
       .logo-letter {
         font-size: 30px;
       }
-
       .info {
         margin-top: 10px;
         color: rgb(93, 91, 91);
