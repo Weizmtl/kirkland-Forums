@@ -46,7 +46,7 @@ const toolbarConfig = {
 };
 
 const editorConfig = {
-  placeholder: "please input content...",
+  placeholder: "Please input text",
   excludeKeys: ["uploadVideo"],
   MENU_CONF: {
     uploadImage: {
@@ -54,7 +54,7 @@ const editorConfig = {
       server: "/api/file/uploadImage",
       fieldName: "file",
       customInsert(responseData, insertFn) {
-        //regular request
+
         if (responseData.code == 200) {
           insertFn(
               proxy.globalInfo.imageUrl + responseData.data.fileName,
@@ -93,6 +93,6 @@ const handleCreated = (editor) => {
 <style lang="scss">
 .editor-html {
   border: 1px solid #ddd;
-  z-index: 1001; //这里不能太大，比导航条大1就可以了，太大会把element弹窗遮住
+  z-index: 1001;
 }
 </style>

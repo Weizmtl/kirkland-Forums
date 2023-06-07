@@ -5,7 +5,7 @@
         :rules="rules"
         ref="formDataRef"
         class="post-panel"
-        label-width="90px"
+        label-width="60px"
     >
       <div class="post-editor">
         <el-card :body-style="{ padding: '5px' }">
@@ -45,11 +45,11 @@
           </template>
           <div class="setting-inner">
             <!--input-->
-            <el-form-item label="Title" prop="title">
+            <el-form-item label="标题" prop="title">
               <el-input
                   clearable
                   :maxlength="150"
-                  placeholder=""
+                  placeholder="Hint"
                   v-model="formData.title"
               ></el-input>
             </el-form-item>
@@ -114,11 +114,11 @@
   </div>
 </template>
 <script setup>
-import {ref, reactive, getCurrentInstance, watch, nextTick} from "vue";
-import {useRouter, useRoute} from "vue-router";
+import { ref, reactive, getCurrentInstance, watch, nextTick } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import { ElMessageBox } from "element-plus";
 
-const {proxy} = getCurrentInstance();
+const { proxy } = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
 
@@ -145,7 +145,7 @@ const getArticleDetail = () => {
         },
         showError: false,
         errorCallback: (response) => {
-          ElMessageBox.alert(response.info, "Error", {
+          ElMessageBox.alert(response.info, "error", {
             "show-close": false,
             callback: (action) => {
               router.go(-1);
@@ -200,6 +200,7 @@ watch(
         getArticleDetail();
       }
     },
+    { immediate: true, deep: true }
 );
 
 const formData = ref({});

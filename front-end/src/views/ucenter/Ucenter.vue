@@ -209,6 +209,15 @@ const showIntegralRecord = () => {
 };
 
 const showComment = ref(false);
+watch(
+    () => store.state.sysSetting,
+    (newVal, oldVal) => {
+      if (newVal) {
+        showComment.value = newVal.commentOpen;
+      }
+    },
+    { immediate: true, deep: true }
+);
 </script>
 
 <style lang="scss" scoped>

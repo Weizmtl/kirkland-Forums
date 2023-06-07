@@ -49,8 +49,8 @@
 </template>
 
 <script setup>
-import Avatar from "@/components/Avatar.vue";
-import Cover from "@/components/Cover.vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 
 const props = defineProps({
   data: {
