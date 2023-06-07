@@ -160,6 +160,40 @@
         </div>
       </div>
     </div>
+    <div class="footer" v-if="showFooter">
+      <div
+          class="footer-content"
+          :style="{ width: proxy.globalInfo.bodyWidth + 'px' }"
+      >
+        <el-row>
+          <el-col :span="6" class="item">
+            <div class="logo">
+              <div class="logo-letter">
+                <span v-for="item in logoInfo" :style="{ color: item.color }">{{
+                    item.letter
+                  }}</span>
+              </div>
+              <div class="info">stable simple community</div>
+            </div>
+          </el-col>
+          <el-col :span="6" class="item">
+            <div class="title">Site-related</div>
+            <div>
+              <a href="####">Site-related</a>
+            </div>
+            <div><a href="####">Site-related</a></div>
+            <div><a href="####">Site-related</a></div>
+          </el-col>
+          <el-col :span="6" class="item">
+            <div class="title">Blogroll
+            </div>
+          </el-col>
+          <el-col :span="6" class="item">
+            <div class="title">Follow webmaster</div>
+          </el-col>
+        </el-row>
+      </div>
+    </div>
     <div class="body-content">
       <router-view/>
     </div>
