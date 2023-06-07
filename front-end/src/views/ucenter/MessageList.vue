@@ -77,7 +77,8 @@
           </el-tab-pane>
         </el-tabs>
         <router-link :to="`/user/${userId}`" class="a-link go-ucenter"
-        >&lt;&lt;User Center</router-link>
+        >&lt;&lt;User Center
+        </router-link>
       </div>
 
       <div class="message-list">
@@ -101,13 +102,17 @@
               <div class="message-content">
                 <div>
                   <router-link class="a-link" :to="`/user/${data.sendUserId}`"
-                  >@{{ data.sendNickName }}</router-link
+                  >@{{ data.sendNickName }}
+                  </router-link
                   >
-                  On my article【<router-link
-                    class="a-link"
-                    :to="`/post/${data.articleId}`"
-                >{{ data.articleTitle }}</router-link
-                >】made a comment
+                  On my article【
+                  <router-link
+                      class="a-link"
+                      :to="`/post/${data.articleId}`"
+                  >{{ data.articleTitle }}
+                  </router-link
+                  >
+                  】made a comment
                   <span class="create-time">{{ data.createTime }}</span>
                 </div>
                 <div class="reply-content" v-html="data.messageContent"></div>
@@ -120,29 +125,76 @@
               <div class="message-content">
                 <div>
                   <router-link class="a-link" :to="`/user/${data.sendUserId}`"
-                  >@{{ data.sendNickName }}</router-link
+                  >@{{ data.sendNickName }}
+                  </router-link
                   >
-                  In the article【<router-link
-                    class="a-link"
-                    :to="`/post/${data.articleId}`"
-                >{{ data.articleTitle }}</router-link
-                >】liked my comment
+                  In the article【
+                  <router-link
+                      class="a-link"
+                      :to="`/post/${data.articleId}`"
+                  >{{ data.articleTitle }}
+                  </router-link
+                  >
+                  】liked my comment
                   <span class="create-time">{{ data.createTime }}</span>
                 </div>
                 <div class="reply-content" v-html="data.messageContent"></div>
               </div>
             </div>
+            <!--like me-->
+            <div class="message-item" v-if="data.messageType == 2">
+              <Avatar :userId="data.sendUserId" :width="50"></Avatar>
+              <div class="message-content">
+                <div>
+                  <router-link class="a-link" :to="`/user/${data.sendUserId}`"
+                  >@{{ data.sendNickName }}
+                  </router-link
+                  >
+                  Liked my article【
+                  <router-link
+                      class="a-link"
+                      :to="`/post/${data.articleId}`"
+                  >{{ data.articleTitle }}
+                  </router-link
+                  >
+                  】
+                  <span class="create-time">{{ data.createTime }}</span>
+                </div>
+              </div>
+            </div>
+            <!--download mine-->
+            <div class="message-item" v-if="data.messageType == 4">
+              <Avatar :userId="data.sendUserId" :width="50"></Avatar>
+              <div class="message-content">
+                <div>
+                  <router-link class="a-link" :to="`/user/${data.sendUserId}`"
+                  >@{{ data.sendNickName }}
+                  </router-link
+                  >
+                  In the article【
+                  <router-link
+                      class="a-link"
+                      :to="`/post/${data.articleId}`"
+                  >{{ data.articleTitle }}
+                  </router-link
+                  >
+                  】downloaded my attachment
+                  <span class="create-time">{{ data.createTime }}</span>
+                </div>
+              </div>
+            </div>
           </template>
         </DataList>
+      </div>
     </div>
-  </div>
   </div>
 </template>
 <script setup>
-import { ref, reactive, getCurrentInstance, watch } from "vue";
-import { useRouter, useRoute } from "vue-router";
-import { useStore } from "vuex";
-const { proxy } = getCurrentInstance();
+import {ref, reactive, getCurrentInstance, watch} from "vue";
+import {useRouter, useRoute} from "vue-router";
+import {useStore} from "vuex";
+
+const {proxy} = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
@@ -186,7 +238,7 @@ watch(
         loadMessage();
       }
     },
-    { immediate: true, deep: true }
+    {immediate: true, deep: true}
 );
 //Monitor user information
 const userId = ref(null);
@@ -197,7 +249,7 @@ watch(
         userId.value = newVal.userId;
       }
     },
-    { immediate: true, deep: true }
+    {immediate: true, deep: true}
 );
 
 //message amount
@@ -207,7 +259,7 @@ watch(
     (newVal, oldVal) => {
       messageCountInfo.value = newVal || {};
     },
-    { immediate: true, deep: true }
+    {immediate: true, deep: true}
 );
 
 </script>
@@ -221,6 +273,7 @@ watch(
       padding: 0px 5px;
     }
   }
+
   .message-panel {
     background: #fff;
     padding: 10px;
@@ -248,6 +301,7 @@ watch(
           margin-left: 10px;
         }
       }
+
       .go-ucenter {
         position: absolute;
         top: 5px;
@@ -255,6 +309,7 @@ watch(
         font-size: 14px;
       }
     }
+
     .message-list {
       .message-item {
         display: flex;
@@ -263,11 +318,19 @@ watch(
         font-size: 14px;
         border-bottom: 1px solid #ddd;
         padding: 10px;
+
         .message-content {
           margin-left: 5px;
+
           .create-time {
             color: #9ba7b9;
             margin-left: 10px;
+          }
+
+          .reply-content {
+            border-left: 2px solid #11a8f4;
+            padding-left: 5px;
+            margin-top: 5px;
           }
         }
       }
