@@ -93,7 +93,7 @@
                 <el-form-item prop="checkCode">
                     <div class="check-code-panel">
                         <el-input size="large" placeholder="Please input verification code"
-                                  v-model="formData.checkCode">
+                                  v-model="formData.checkCode" @keyup.enter="doSubmit">
                             <template #prefix>
                                 <span class="iconfont icon-checkcode"></span>
                             </template>
