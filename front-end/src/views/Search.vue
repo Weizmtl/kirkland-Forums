@@ -22,6 +22,7 @@
               v-model="formData.keyword"
               @keyup.enter="search"
               @focus="startSearchHandler"
+              @change="changeInput"
           >
             <template #suffix>
               <span
@@ -33,10 +34,24 @@
           </el-input>
         </el-form-item>
       </el-form>
+    </div>
+    <div class="article-list">
+      <DataList
+          :loading="loading"
+          :dataSource="articleListInfo"
+          @loadData="search"
+          noDataMsg="Not find yet!"
+      >
+        <template #default="{ data }">
+          <ArticleListItem
+              :data="data"
+              :showComment="showComment"
+              :htmlTitle="true"
+          ></ArticleListItem>
+        </template>
+      </DataList>
+    </div>
   </div>
-  </div>
-
-
 </template>
 <script setup>
 
@@ -49,8 +64,27 @@ const router = useRouter();
 const route = useRoute();
 const store = useStore();
 
+const api = {
+  loadArticle: "/forum/search",
+};
+
+//start search
+const startSearch = ref(false);
+const startSearchHandler = () => {
+  startSearch.value = true;
+};
+
 const formData = ref({});
 const formDataRef = ref();
+const rules = {
+  keyword: [
+    { required: true, message: "Please input keywords" },
+    { min: 3, message: "Keywords is short, at least 3 letters" },
+  ],
+};
+
+const loading = ref(false);
+const articleListInfo = ref({});
 </script>
 
 <style scoped lang="scss">
