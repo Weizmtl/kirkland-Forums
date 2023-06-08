@@ -13,7 +13,6 @@
           ref="formDataRef"
           @submit.prevent
       >
-
         <el-form-item prop="keyword">
           <el-input
               size="large"
@@ -55,7 +54,7 @@
 </template>
 <script setup>
 
-
+import ArticleListItem from "@/views/forum/ArticleListItem.vue";
 import { ref, reactive, getCurrentInstance, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 const { proxy } = getCurrentInstance();
@@ -67,6 +66,8 @@ const store = useStore();
 const api = {
   loadArticle: "/forum/search",
 };
+
+const searchPanelHeight = (window.innerHeight - 60 - 140 - 60) / 2;
 
 //start search
 const startSearch = ref(false);
@@ -85,9 +86,56 @@ const rules = {
 
 const loading = ref(false);
 const articleListInfo = ref({});
+
+const search = async () => {
+  formDataRef.value.validate(async (valid) => {
+    if (!valid) {
+      return;
+    }
+    loading.value = true;
+    let params = {
+      pageNo: articleListInfo.value.pageNo,
+      keyword: formData.value.keyword,
+    };
+    let result = await proxy.Request({
+      url: api.loadArticle,
+      params: params,
+      showLoading: false,
+    });
+    loading.value = false;
+    if (!result) {
+      return;
+    }
+    let list = result.data.list;
+    list.forEach((element) => {
+      element.title = element.title.replace(
+          params.keyword,
+          "<span style='color:red'>" + params.keyword + "</span>"
+      );
+    });
+    articleListInfo.value = result.data;
+  });
+};
+
+const changeInput = () => {
+  if (formData.value.keyword == "") {
+    articleListInfo.value = {};
+  }
+};
+
+const showComment = ref(false);
+watch(
+    () => store.state.sysSetting,
+    (newVal, oldVal) => {
+      if (newVal) {
+        showComment.value = newVal.commentOpen;
+      }
+    },
+    { immediate: true, deep: true }
+);
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .search-body {
   background: #fff;
   padding: 10px;

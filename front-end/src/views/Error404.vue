@@ -9,7 +9,7 @@
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
 .error {
   text-align: center;
   padding-top: 200px;

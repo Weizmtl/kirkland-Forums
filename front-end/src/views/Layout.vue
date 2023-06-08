@@ -163,7 +163,7 @@
     <div class="body-content">
       <router-view />
     </div>
-    <div class="footer">
+    <div class="footer" v-if="showFooter">
       <div
           class="footer-content"
           :style="{ width: proxy.globalInfo.bodyWidth + 'px' }"
@@ -206,13 +206,12 @@
 
 <script setup>
 import LoginAndRegister from "./LoginAndRegister.vue";
-import {ref, reactive, getCurrentInstance, onMounted, watch} from "vue";
-import {useRouter} from "vue-router";
-import {useStore} from "vuex";
-
-const {proxy} = getCurrentInstance();
+import { ref, reactive, getCurrentInstance, onMounted, watch } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { useStore } from "vuex";
+const { proxy } = getCurrentInstance();
 const router = useRouter();
-
+const route = useRoute();
 const store = useStore();
 
 const api = {
@@ -453,6 +452,19 @@ const loadSysSetting = async () => {
 const goSearch = () => {
   router.push("/search");
 };
+
+const showFooter = ref(true);
+watch(
+    () => route.path,
+    (newVal, oldVal) => {
+      if (newVal.indexOf("newPost") != -1 || newVal.indexOf("editPost") != -1) {
+        showFooter.value = false;
+      } else {
+        showFooter.value = true;
+      }
+    },
+    { immediate: true, deep: true }
+);
 
 </script>
 
