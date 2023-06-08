@@ -46,7 +46,7 @@
             <el-button type="primary" class="op-btn" @click="newPost">
               Post<span class="= iconfont icon-add"></span>
             </el-button>
-            <el-button type="primary" calss="op-btn">
+            <el-button type="primary" calss="op-btn" @click="goSearch">
               Search<span class="= iconfont icon-search"></span>
             </el-button>
           </div>
@@ -450,7 +450,9 @@ const loadSysSetting = async () => {
   }
   store.commit("saveSysSetting", result.data);
 };
-
+const goSearch = () => {
+  router.push("/search");
+};
 
 </script>
 

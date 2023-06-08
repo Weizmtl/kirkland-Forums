@@ -45,7 +45,11 @@ const router = createRouter({
       path: "/:pathMatch(.*)*",
       name: "ErrorPage",
       component: () => import("@/views/Error404.vue")
-    }
+    },{
+      path: '/search',
+      name: "Search",
+      component: () => import('@/views/Search.vue'),
+    },
   ]
 })
 router.beforeEach((to, from, next) => {
