@@ -27,7 +27,7 @@
         <!--        Title-->
         <div class="title">
           <span class="tag tag-no-audit" v-if="articleInfo.status == 0"
-          >to be review</span>
+          >Pending</span>
           {{ articleInfo.title }}</div>
         <!--        user info-->
         <div class="user-info">
@@ -41,7 +41,7 @@
               <span>{{ articleInfo.postTime }}</span>
               <span class="address">&nbsp;·&nbsp;{{ articleInfo.userIpAddress }}</span>
               <span class="iconfont icon-eye-solid">
-                {{ articleInfo.readCount == 0 ? "Read" : articleInfo.readCount }}
+                {{ articleInfo.readCount == 0 ? "View" : articleInfo.readCount }}
               </span>
               <router-link
                   v-if="articleInfo.userId == currentUserInfo.userId"

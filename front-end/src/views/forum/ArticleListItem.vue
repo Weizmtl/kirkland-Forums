@@ -17,7 +17,9 @@
         </div>
         <router-link :to="`/post/${data.articleId}`" class="title">
           <span v-if="data.topType==1" class="top">TOP</span>
-          <span class="title-info>">{{ data.title }}</span>
+          <span v-if="data.status == 0" class="tag tag-no-audit">Pending</span>
+          <span v-if="htmlTitle" v-html="data.title"></span>
+          <span v-else>{{ data.title }}</span>
         </router-link>
         <div class="summary">{{ data.summary }}</div>
         <div class="article-info">
@@ -29,7 +31,7 @@
                         {{ data.goodCount == 0 ? "Like" : data.goodCount }}
                     </span>
 
-          <span class="iconfont icon-comment">
+          <span class="iconfont icon-comment" v-if="showComment">
                         {{ data.commentCount == 0 ? "Comment" : data.commentCount }}
                     </span>
 
