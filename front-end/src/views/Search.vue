@@ -23,6 +23,13 @@
               @keyup.enter="search"
               @focus="startSearchHandler"
           >
+            <template #suffix>
+              <span
+                  class="iconfont icon-search"
+                  @click="search"
+                  @blur="formData.keyword = $event.target.value.trim()"
+              ></span>
+            </template>
           </el-input>
         </el-form-item>
       </el-form>
@@ -47,5 +54,16 @@ const formDataRef = ref();
 </script>
 
 <style scoped lang="scss">
-
+.search-body {
+  background: #fff;
+  padding: 10px;
+  min-height: calc(100vh - 210px);
+  .search-panel {
+    display: flex;
+    justify-content: center;
+    .el-input {
+      width: 700px;
+    }
+  }
+}
 </style>
