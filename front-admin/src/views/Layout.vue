@@ -79,6 +79,49 @@ const menuList = [
 ];
 </script>
 
-<style scoped>
+<style lang="scss">
+.layout-body {
+  .aside {
+    background: #3d3c4a;
 
+    .logo {
+      display: flex;
+      height: 50px;
+      color: #fff;
+      background: #191828;
+      align-items: center;
+      font-size: 18px;
+      padding-left: 5px;
+    }
+
+    .menu-panel {
+      height: calc(100vh - 50px);
+
+      .menu-name {
+        padding-left: 10px;
+      }
+
+      //Remove border
+      .el-menu {
+        border-right: none;
+      }
+
+      //Remove the color of each menu border
+      .el-menu-item {
+        background: #353544;
+      }
+
+      //Selected Axis
+      .el-menu-item.is-active {
+        color: #fff;
+        background: var(--el-color-primary);
+      }
+
+      //Mouse over the color
+      .el-menu-item:hover {
+        color: #d8d8ee;
+      }
+    }
+  }
+}
 </style>
