@@ -19,6 +19,28 @@
             router
             :defaultActive="defaultActive"
         >
+          <template v-for="item in menuList">
+            <el-sub-menu :index="item.path" v-if="item.children">
+              <template #title>
+                <i :class="['iconfont', item.icon]"></i>
+                <span class="menu-name">{{ item.menuName }}</span>
+              </template>
+              <el-menu-item
+                  :index="subItem.path"
+                  v-for="subItem in item.children"
+              >
+                  <span class="menu-name">{{
+                      subItem.menuName
+                    }}</span></el-menu-item
+              >
+            </el-sub-menu>
+            <el-menu-item :index="item.path" v-else>
+              <i :class="['iconfont', item.icon]"></i>
+              <template #title>
+                <span class="menu-name">{{ item.menuName }}</span>
+              </template>
+            </el-menu-item>
+          </template>
         </el-menu>
       </div>
     </el-container>
@@ -30,9 +52,16 @@ import { useRoute, useRouter } from "vue-router";
 import { ref, watch } from "vue";
 const router = useRouter();
 const route = useRoute();
+
+//Select by default
+const defaultActive = ref();
+
+//The default expanded menu
+const defaultOpeneds = ref([]);
 //aside width
 const asideWidth = ref(250);
-
+//Collapse close menu
+const menuCollapse = ref(false);
 //system menu
 const menuList = [
   {
