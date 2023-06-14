@@ -1,5 +1,4 @@
 <template>
-  <template>
     <div>
       <el-table
           ref="dataTable"
@@ -27,11 +26,59 @@
             width="60"
             align="center"
         ></el-table-column>
+        <!--Data column-->
+        <template v-for="(column, index) in columns">
+          <template v-if="column.scopedSlots">
+            <el-table-column
+                :key="index"
+                :prop="column.prop"
+                :label="column.label"
+                :align="column.align || 'left'"
+                :width="column.width"
+            >
+              <template #default="scope">
+                <slot
+                    :name="column.scopedSlots"
+                    :index="scope.$index"
+                    :row="scope.row"
+                >
+                </slot>
+              </template>
+            </el-table-column>
+          </template>
+          <template v-else>
+            <el-table-column
+                :key="index"
+                :prop="column.prop"
+                :label="column.label"
+                :align="column.align || 'left'"
+                :width="column.width"
+                :fixed="column.fixed"
+            >
+            </el-table-column>
+          </template>
+        </template>
       </el-table>
+      <!-- paging -->
+      <div class="pagination" v-if="showPagination">
+        <el-pagination
+            v-if="dataSource.totalCount"
+            background
+            :total="dataSource.totalCount"
+            :page-sizes="[15, 30, 50, 100]"
+            :page-size="dataSource.pageSize"
+            :current-page.sync="dataSource.pageNo"
+            layout="total, sizes, prev, pager, next, jumper"
+            @size-change="handlePageSizeChange"
+            @current-change="handlePageNoChange"
+            style="text-align: right"
+        ></el-pagination>
+      </div>
     </div>
   </template>
+
   <script setup>
-    import { ref } from "vue";
+    import {ref} from "vue";
 
     const emit = defineEmits(["rowSelected", "rowClick"]);
     const props = defineProps({
@@ -44,7 +91,7 @@
         type: Object,
         default: {
           extHeight: 0,
-          showIndex: false,
+          showIndex: true,
         },
       },
       columns: Array,
@@ -86,7 +133,7 @@
       dataTable.value.setCurrentRow(row);
     };
     //Expose the child component, otherwise the parent component cannot be called
-    defineExpose({ setCurrentRow, clearSelection });
+    defineExpose({setCurrentRow, clearSelection});
 
     //Line click
     const handleRowClick = (row) => {
@@ -98,8 +145,20 @@
       emit("rowSelected", row);
     };
 
+    //Toggle page size
+    const handlePageSizeChange = (size) => {
+      props.dataSource.pageSize = size;
+      props.dataSource.pageNo = 1;
+      props.fetch();
+    };
+    // Page switching
+    const handlePageNoChange = (pageNo) => {
+      props.dataSource.pageNo = pageNo;
+      props.fetch();
+    };
 
   </script>
+
   <style lang="scss">
     .pagination {
       padding-top: 10px;
