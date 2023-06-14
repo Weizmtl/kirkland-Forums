@@ -3,7 +3,7 @@
     <el-container>
       <el-aside class="aside" :style="{ width: asideWidth + 'px' }">
         <div class="logo">
-          <span v-if="!menuCollapse">KKbbs Management</span>
+          <span v-if="!menuCollapse">BBS Management</span>
         </div>
         <div class="menu-panel">
           <el-menu
@@ -88,73 +88,106 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { useRoute, useRouter } from "vue-router";
 import { ref, watch } from "vue";
 const router = useRouter();
 const route = useRoute();
-
 //Select by default
 const defaultActive = ref();
-
-//The default expanded menu
-const defaultOpeneds = ref([]);
 //aside width
 const asideWidth = ref(250);
-//Collapse close menu
-const menuCollapse = ref(false);
+//The default expanded menu
+const defaultOpeneds = ref([]);
 //system menu
 const menuList = [
   {
-    menuName: "content management",
+    menuName: "Content Management",
     icon: "icon-article",
     path: "/forum",
     children: [
       {
-        menuName: "article management",
+        menuName: "Articles Management",
         path: "/forum/article",
       },
       {
-        menuName: "comment management",
+        menuName: "Comments Management",
         path: "/forum/comment",
       },
       {
-        menuName: "form management",
+        menuName: "Boards Management",
         path: "/forum/board",
       },
     ],
   },
   {
-    menuName: "user management",
+    menuName: "User Management",
     icon: "icon-user",
     path: "/user",
     children: [
       {
-        menuName: "user list",
+        menuName: "UserList",
         path: "/user/list",
       },
     ],
   },
   {
-    menuName: "configuration",
+    menuName: "Settings",
     icon: "icon-settings",
     path: "/settings",
     children: [
       {
-        menuName: "system configuration",
+        menuName: "System Settings",
         path: "/settings/sys",
       },
     ],
   },
 ];
+//The menu is converted to map
+const menuMap = {};
+const init = () => {
+  menuList.forEach((item) => {
+    defaultOpeneds.value.push(item.path);
+    item.children.forEach((subItem) => {
+      menuMap[subItem.path] = subItem;
+    });
+  });
+};
+
+init();
+//Collapse close menu
+const menuCollapse = ref(false);
+const opMenu = () => {
+  menuCollapse.value = !menuCollapse.value;
+  if (menuCollapse.value) {
+    asideWidth.value = 63;
+  } else {
+    asideWidth.value = 250;
+  }
+};
+//Menu crumbs
+const menuBreadCrumbList = ref([]);
+
 
 </script>
 
 <style lang="scss">
+//Menu collapse style
+.el-popper {
+  border: none !important;
+  .el-menu-item.is-active {
+    background: var(--el-color-primary);
+  }
+  .el-menu-item:hover {
+    color: #d8d8ee;
+  }
+  .el-menu--popup {
+    padding: 0px;
+  }
+}
 .layout-body {
   .aside {
     background: #3d3c4a;
-
     .logo {
       display: flex;
       height: 50px;
@@ -164,34 +197,60 @@ const menuList = [
       font-size: 18px;
       padding-left: 5px;
     }
-
     .menu-panel {
       height: calc(100vh - 50px);
-
       .menu-name {
         padding-left: 10px;
       }
-
       //Remove border
       .el-menu {
         border-right: none;
       }
-
-      //Remove the color of each menu border
+      //The color of each menu
       .el-menu-item {
         background: #353544;
       }
-
-      //Selected Axis
+      //selected color
       .el-menu-item.is-active {
         color: #fff;
         background: var(--el-color-primary);
       }
-
       //Mouse over the color
       .el-menu-item:hover {
         color: #d8d8ee;
       }
+    }
+  }
+  .header {
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+    height: 50px;
+    line-height: 50px;
+    padding: 0px 10px !important;
+    display: flex;
+    align-items: center;
+    .op-menu {
+      font-size: 20px;
+      cursor: pointer;
+      color: #3a3a40;
+    }
+    .menu-bread {
+      margin-left: 10px;
+    }
+  }
+  .main-content {
+    padding: 0px;
+    .tag-content {
+      .el-tabs--border-card {
+        border: none;
+      }
+      .el-tabs__content {
+        display: none;
+      }
+    }
+    .content-body {
+      overflow: hidden;
+      padding: 10px 10px 5px 10px;
     }
   }
 }
