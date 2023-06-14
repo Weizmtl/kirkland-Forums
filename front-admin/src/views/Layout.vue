@@ -168,7 +168,48 @@ const opMenu = () => {
 //Menu crumbs
 const menuBreadCrumbList = ref([]);
 
+//tab operation
+const tabList = ref([]);
+const tabClick = (e) => {
+  router.push(e);
+};
+const editTab = (targetKey, action) => {
+  if (action !== "remove") {
+    return;
+  }
+  let curlPath = defaultActive.value;
+  let tabs = tabList.value;
+  if (targetKey == defaultActive.value) {
+    tabs.forEach((tab, index) => {
+      if (tab.path === targetKey) {
+        //If you are not deleting the currently selected tag, select the next or previous tag
+        let nextTab = tabs[index + 1] || tabs[index - 1];
+        if (nextTab) {
+          curlPath = nextTab.path;
+        }
+      }
+    });
+  }
+  tabList.value = tabs.filter((tab) => tab.path !== targetKey);
+  if (curlPath !== defaultActive.value) {
+    router.push(curlPath);
+  }
+};
 
+watch(
+    () => route,
+    (newVal, oldVal) => {
+      defaultActive.value = route.path;
+      menuBreadCrumbList.value = route.matched;
+      let currentMenu = tabList.value.find((item) => {
+        return item.path == defaultActive.value;
+      });
+      if (!currentMenu) {
+        tabList.value.push(menuMap[defaultActive.value]);
+      }
+    },
+    { immediate: true, deep: true }
+);
 </script>
 
 <style lang="scss">
