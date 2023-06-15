@@ -14,11 +14,11 @@ const router = createRouter({
             redirect: "/forum/article",
             children: [{
                 path: "/forum",
-                name: "内容管理",
+                name: "Content Management",
                 children: [
                     {
                         path: "article",
-                        name: "Acticle Management",
+                        name: "Article Management",
                         component: () => import('@/views/forum/ArticleList.vue'),
                     }, {
                         path: "comment",

@@ -10,16 +10,34 @@
           :options="tableOptions"
           @rowSelected="setRowSelected"
       >
+        <!-- User info -->
+        <template #userInfo="{ index, row }">
+          <div class="user-info">
+            <Avatar :userId="row.userId" :width="50"></Avatar>
+            <div class="name-info">
+              <div>
+                <a
+                    :href="proxy.globalInfo.webDomain + 'user/' + row.userId"
+                    target="_blank"
+                    class="a-link"
+                >{{ row.nickName }}</a
+                >
+              </div>
+              <div>{{ row.userIpAddress }}</div>
+            </div>
+          </div>
+        </template>
       </Table>
     </div>
   </div>
 
 </template>
 <script>
-import { getCurrentInstance, reactive, ref, toRaw } from "vue";
-const { proxy } = getCurrentInstance();
+import {getCurrentInstance, reactive, ref, toRaw} from "vue";
 
-const api={
+const {proxy} = getCurrentInstance();
+
+const api = {
   loadDataList: "/forum/loadArticle",
 };
 
@@ -85,8 +103,47 @@ const tableOptions = {
   selectType: "checkbox",
 };
 
+const loadDataList = async () => {
+  let params = {
+    pageNo: tableData.value.pageNo,
+    pageSize: tableData.value.pageSize,
+  };
+  Object.assign(params, searchFormData);
+  params.boardIds = toRaw(params.boardIds) || [];
+  if (params.boardIds.length == 1) {
+    params.pBoardId = params.boardIds[0];
+  } else if (params.boardIds.length == 2) {
+    params.pBoardId = params.boardIds[0];
+    params.boardId = params.boardIds[1];
+  }
+  delete params.boardIds;
+  let result = await proxy.Request({
+    url: api.loadDataList,
+    params,
+  });
+  if (!result) {
+    return;
+  }
+  tableData.value = result.data;
+};
 </script>
 
-<style scoped>
+<style lang="scss">
+.data-list {
+  .user-info {
+    display: flex;
+    align-items: center;
 
+    .name-info {
+      margin-left: 5px;
+      font-size: 13px;
+    }
+  }
+
+  .op {
+    .iconfont {
+      cursor: pointer;
+    }
+  }
+}
 </style>
