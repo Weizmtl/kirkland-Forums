@@ -1,5 +1,103 @@
 <template>
-  <div>
+  <div class="top-panel">
+    <el-form :model="searchFormData" label-width="50px">
+      <el-row>
+        <el-col :span="4">
+          <el-form-item label="Title" prop="titleFuzzy">
+            <el-input
+                placeholder="Please enter a title"
+                v-model="searchFormData.titleFuzzy"
+                clearable
+                @keyup.enter.native="loadDataList"
+            >
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="4">
+          <el-form-item label="Nickname" prop="nickNameFuzzy">
+            <el-input
+                placeholder="Please enter a nickname"
+                v-model="searchFormData.nickNameFuzzy"
+                clearable
+                @keyup.enter.native="loadDataList"
+            >
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="4">
+          <el-form-item label="Board" prop="sex">
+            <el-cascader
+                placeholder="Please select a board"
+                :options="boardList"
+                :props="boardProps"
+                clearable
+                v-model="searchFormData.boardIds"
+                :style="{ width: '100%' }"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="4">
+          <el-form-item label="Attachment" prop="sex">
+            <el-select
+                v-model="searchFormData.attachmentType"
+                clearable
+                placeholder="Please select"
+                :style="{ width: '100%' }"
+            >
+              <el-option :value="1" label="Yes"></el-option>
+              <el-option :value="0" label="No"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="4">
+          <el-form-item label="Status" prop="status">
+            <el-select
+                v-model="searchFormData.status"
+                clearable
+                placeholder="Please select status"
+                :style="{ width: '100%' }"
+            >
+              <el-option :value="-1" label="deleted"></el-option>
+              <el-option :value="0" label="to be review"></el-option>
+              <el-option :value="1" label="reviewed"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="4">
+          <el-form-item label="top" prop="topType">
+            <el-select
+                v-model="searchFormData.topType"
+                clearable
+                placeholder="Please select"
+                :style="{ width: '100%' }"
+            >
+              <el-option :value="0" label="not on top"></el-option>
+              <el-option :value="1" label="top"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="4" :style="{ 'padding-left': '10px' }">
+          <el-button-group>
+            <el-button type="primary" @click="loadDataList">Search</el-button>
+            <el-button
+                type="success"
+                @click="auditBatch"
+                :disabled="selectBatchList.length == 0"
+            >Batch approval</el-button
+            >
+            <el-button
+                type="danger"
+                @click="delBatch"
+                :disabled="selectBatchList.length == 0"
+            >Batch Remove</el-button
+            >
+          </el-button-group>
+        </el-col>
+      </el-row>
+    </el-form>
+  </div>
     <div class="data-list">
       <Table
           ref="tableRef"
@@ -115,8 +213,6 @@
         </template>
       </Table>
     </div>
-  </div>
-
 </template>
 <script>
 import {getCurrentInstance, reactive, ref, toRaw} from "vue";
