@@ -27,6 +27,92 @@
             </div>
           </div>
         </template>
+        <!--Cover-->
+        <template #cover="{ index, row }">
+          <Cover :cover="row.cover"></Cover>
+        </template>
+        <!--Title-->
+        <template #titleInfo="{ index, row }">
+          <a
+              class="a-link"
+              target="_blank"
+              tag="a"
+              :href="proxy.globalInfo.webDomain + 'post/' + row.articleId"
+          >{{ row.title }}</a
+          >
+        </template>
+        <!--Board-->
+        <template #boardInfo="{ index, row }">
+          <div>
+            <span>{{ row.pBoardName }}</span>
+            <span v-if="row.boardName">/{{ row.boardName }}</span>
+          </div>
+        </template>
+        <!--Interactive info-->
+        <template #interactionInfo="{ index, row }">
+          <div>Read：{{ row.readCount }}</div>
+          <div>Like：{{ row.goodCount }}</div>
+          <div>
+            Comment：<span>{{ row.commentCount }}</span>
+            <span
+                class="a-link"
+                :style="{ 'margin-left': '5px' }"
+                @click="showComment(row.articleId)"
+                v-if="row.commentCount"
+            >View</span
+            >
+          </div>
+        </template>
+        <!--Attachment info-->
+        <template #attachmentInfo="{ index, row }">
+          <div v-if="row.attachmentType == 0">none attachment</div>
+          <div v-if="row.attachmentType == 1">
+          <span
+              @click="showAttachment(row.nickName, row.articleId)"
+              class="a-link"
+          >Check attachment</span
+          >
+          </div>
+        </template>
+        <!--Status-->
+        <template #statusInfo="{ index, row }">
+          <span v-if="row.status == -1" :style="{ color: 'red' }">Deleted</span>
+          <span v-if="row.status == 0" :style="{ color: 'red' }">To be review</span>
+          <span v-if="row.status == 1" :style="{ color: 'green' }">Reviewed</span>
+          <div v-if="row.topType == 1" :style="{ color: 'green' }">Top</div>
+          <div v-if="row.topType == 0" :style="{ color: 'green' }">Untop</div>
+        </template>
+        <!--Operation info-->
+        <template #op="{ index, row }">
+          <div class="op" v-if="row.status != -1">
+            <el-dropdown trigger="click">
+              <span class="iconfont icon-more"> </span>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item @click="updateBoard(row)"
+                  >modify</el-dropdown-item
+                  >
+                  <el-dropdown-item
+                      @click="topArticle(row)"
+                      v-if="row.topType == 1 && row.status == 1"
+                  >cancel top</el-dropdown-item
+                  >
+                  <el-dropdown-item
+                      @click="topArticle(row)"
+                      v-if="row.topType == 0 && row.status == 1"
+                  >Top</el-dropdown-item
+                  >
+                  <el-dropdown-item @click="delArticle(row)"
+                  >Delete</el-dropdown-item
+                  >
+                  <el-dropdown-item @click="audit(row)" v-if="row.status == 0"
+                  >Review</el-dropdown-item
+                  >
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </div>
+        </template>
       </Table>
     </div>
   </div>
