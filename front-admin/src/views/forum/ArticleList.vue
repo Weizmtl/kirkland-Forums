@@ -25,7 +25,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="4">
-          <el-form-item label="Board" prop="sex">
+          <el-form-item label="Board" prop="boardIds">
             <el-cascader
                 placeholder="Please select a board"
                 :options="boardList"
@@ -37,7 +37,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="4">
-          <el-form-item label="Attachment" prop="sex">
+          <el-form-item label="Attachment" prop="attachmentType">
             <el-select
                 v-model="searchFormData.attachmentType"
                 clearable
