@@ -221,7 +221,11 @@ const {proxy} = getCurrentInstance();
 
 const api = {
   loadDataList: "/forum/loadArticle",
+  loadBoard: "/board/loadBoard",
 };
+
+//Search
+const searchFormData = reactive({});
 
 //Colum List
 const columns = [{
@@ -285,6 +289,25 @@ const tableOptions = {
   selectType: "checkbox",
 };
 
+//obtain board
+const boardProps = {
+  multiple: false,
+  checkStrictly: true,
+  value: "boardId",
+  label: "boardName",
+};
+const boardList = ref([]);
+const loadBoardList = async () => {
+  let result = await proxy.Request({
+    url: api.loadBoard,
+  });
+  if (!result) {
+    return;
+  }
+  boardList.value = result.data;
+};
+loadBoardList();
+
 const loadDataList = async () => {
   let params = {
     pageNo: tableData.value.pageNo,
@@ -308,6 +331,17 @@ const loadDataList = async () => {
   }
   tableData.value = result.data;
 };
+
+//batch review
+const auditBatch = (data) => {
+
+};
+
+//batch delete
+const delBatch = (data) => {
+
+};
+
 </script>
 
 <style lang="scss">
