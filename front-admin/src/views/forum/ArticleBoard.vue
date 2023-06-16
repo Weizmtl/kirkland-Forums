@@ -70,7 +70,43 @@ const boardProps = {
 };
 const formData = ref({});
 const formDataRef = ref();
+const updateBoard = async (data) => {
+  dialogConfig.show = true;
+  nextTick(() => {
+    formDataRef.value.resetFields();
+    data.boardIds = [];
+    data.boardIds.push(data.pBoardId);
+    if (data.boardId != null && data.boardId != 0) {
+      data.boardIds.push(data.boardId);
+    }
+    formData.value = data;
+  });
+};
+defineExpose({ updateBoard });
 
+const emit = defineEmits(["reload"]);
+const submitForm = async () => {
+  let params = {
+    articleId: formData.value.articleId,
+  };
+  params.boardIds = toRaw(formData.value.boardIds);
+  if (params.boardIds.length == 1) {
+    params.pBoardId = params.boardIds[0];
+  } else if (params.boardIds.length == 2) {
+    params.pBoardId = params.boardIds[0];
+    params.boardId = params.boardIds[1];
+  }
+  delete params.boardIds;
+  let result = await proxy.Request({
+    url: api.updateBoard,
+    params: params,
+  });
+  if (!result) {
+    return;
+  }
+  dialogConfig.show = false;
+  emit("reload");
+};
 </script>
 
 <style lang="scss" scoped>

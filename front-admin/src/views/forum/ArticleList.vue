@@ -308,6 +308,12 @@ const loadBoardList = async () => {
 };
 loadBoardList();
 
+//Modify board
+const articleBoardRef = ref();
+const updateBoard = (row) => {
+  articleBoardRef.value.updateBoard(row);
+};
+
 const loadDataList = async () => {
   let params = {
     pageNo: tableData.value.pageNo,
