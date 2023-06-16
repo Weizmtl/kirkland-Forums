@@ -367,6 +367,22 @@ const audit = (data) => {
   });
 };
 
+//delete
+const delArticle = (data) => {
+  proxy.Confirm(`你确定要删除【${data.title}】`, async () => {
+    let result = await proxy.Request({
+      url: api.delArticle,
+      params: {
+        articleIds: data.articleId,
+      },
+    });
+    if (!result) {
+      return;
+    }
+    loadDataList();
+  });
+};
+
 //batch review
 const auditBatch = (data) => {
   proxy.Confirm(`Do you want batch review?`, async () => {
