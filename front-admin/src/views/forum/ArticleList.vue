@@ -217,7 +217,7 @@
 <script>
 import {getCurrentInstance, reactive, ref, toRaw} from "vue";
 
-const {proxy} = getCurrentInstance();
+const { proxy } = getCurrentInstance();
 
 const api = {
   loadDataList: "/forum/loadArticle",
@@ -283,6 +283,7 @@ const columns = [{
     scopedSlots: "op",
   },];
 
+
 const tableData = ref({});
 const tableOptions = {
   extHeight: 90,
@@ -307,6 +308,15 @@ const loadBoardList = async () => {
   boardList.value = result.data;
 };
 loadBoardList();
+
+const selectBatchList = ref([]);
+const setRowSelected = (rows) => {
+  selectBatchList.value = [];
+  rows.forEach((element) => {
+    selectBatchList.value.push(element.articleId);
+  });
+};
+const tableRef = ref();
 
 //Modify board
 const articleBoardRef = ref();
@@ -340,12 +350,36 @@ const loadDataList = async () => {
 
 //batch review
 const auditBatch = (data) => {
-
+  proxy.Confirm(`Do you want batch review?`, async () => {
+    let result = await proxy.Request({
+      url: api.auditArticle,
+      params: {
+        articleIds: selectBatchList.value.join(","),
+      },
+    });
+    if (!result) {
+      return;
+    }
+    tableRef.value.clearSelection();
+    loadDataList();
+  });
 };
 
 //batch delete
 const delBatch = (data) => {
-
+  proxy.Confirm(`Do you want batch delete?？`, async () => {
+    let result = await proxy.Request({
+      url: api.delArticle,
+      params: {
+        articleIds: selectBatchList.value.join(","),
+      },
+    });
+    if (!result) {
+      return;
+    }
+    tableRef.value.clearSelection();
+    loadDataList();
+  });
 };
 
 </script>
