@@ -222,6 +222,9 @@ const { proxy } = getCurrentInstance();
 const api = {
   loadDataList: "/forum/loadArticle",
   loadBoard: "/board/loadBoard",
+  delArticle: "/forum/delArticle",
+  topArticle: "/forum/topArticle",
+  auditArticle: "/forum/auditArticle",
 };
 
 //Search
@@ -346,6 +349,22 @@ const loadDataList = async () => {
     return;
   }
   tableData.value = result.data;
+};
+
+//review
+const audit = (data) => {
+  proxy.Confirm(`Do you want to review【${data.title}】?`, async () => {
+    let result = await proxy.Request({
+      url: api.auditArticle,
+      params: {
+        articleIds: data.articleId,
+      },
+    });
+    if (!result) {
+      return;
+    }
+    loadDataList();
+  });
 };
 
 //batch review
