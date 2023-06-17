@@ -383,6 +383,24 @@ const delArticle = (data) => {
   });
 };
 
+//top
+const topArticle = (data) => {
+  const opName = data.topType == 0 ? "SetTop" : "UnsetTop";
+  proxy.Confirm(`Do you want to set the top【${data.title}】 ${opName}`, async () => {
+    let result = await proxy.Request({
+      url: api.topArticle,
+      params: {
+        topType: data.topType == 0 ? 1 : 0,
+        articleId: data.articleId,
+      },
+    });
+    if (!result) {
+      return;
+    }
+    loadDataList();
+  });
+};
+
 //batch review
 const auditBatch = (data) => {
   proxy.Confirm(`Do you want batch review?`, async () => {
