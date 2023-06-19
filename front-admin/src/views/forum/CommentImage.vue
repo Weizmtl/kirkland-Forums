@@ -12,11 +12,22 @@
 </template>
 
 <script>
-export default {
-  name: "CommentImage"
-}
+import { getCurrentInstance } from "vue";
+const { proxy } = getCurrentInstance();
+const props = defineProps({
+  src: {
+    type: String,
+  },
+  imgList: {
+    type: Array,
+  },
+});
 </script>
 
 <style scoped>
-
+.comment-img {
+  width: 80px;
+  height: 80px;
+  background: #eeeeee;
+}
 </style>

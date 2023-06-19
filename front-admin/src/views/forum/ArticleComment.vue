@@ -27,7 +27,7 @@
                 ></CommentImage>
               </div>
               <div class="post-info">
-                发布：{{ item.postTime }}&nbsp;·&nbsp;{{
+                Post：{{ item.postTime }}&nbsp;·&nbsp;{{
                   item.userIpAddress
                 }}&nbsp;&nbsp;Like：{{ item.goodCount }}
               </div>
@@ -42,7 +42,7 @@
                     >{{ sub.nickName }}</a
                     >
                     <span v-if="sub.replyUserId">
-                      回复
+                      Reply
                       <a
                           target="_blank"
                           class="a-link"
@@ -54,10 +54,10 @@
                     </span>
                     <div v-html="sub.content" class="comment-content"></div>
                     <div class="post-info">
-                      发布：{{ sub.postTime }}&nbsp;·&nbsp;{{
+                      Post：{{ sub.postTime }}&nbsp;·&nbsp;{{
                         sub.userIpAddress
                       }}
-                      赞：{{ sub.goodCount }}
+                      Like：{{ sub.goodCount }}
                     </div>
                   </div>
                 </div>
@@ -66,7 +66,7 @@
           </div>
         </div>
       </div>
-      <div v-if="commentList.length == 0">暂无评论</div>
+      <div v-if="commentList.length == 0">No Comment</div>
     </Dialog>
   </div>
 </template>
