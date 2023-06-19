@@ -9,14 +9,19 @@
     "test:unit": "vitest"
   },
   "dependencies": {
+    "@kangc/v-md-editor": "^2.3.15",
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^5.1.12",
     "axios": "^1.4.0",
     "element-plus": "^2.3.6",
+    "highlight.js": "^11.8.0",
     "js-md5": "^0.7.3",
-    "sass": "^1.63.2",
-    "sass-loader": "^13.3.1",
+    "sass": "^1.63.4",
+    "sass-loader": "^13.3.2",
     "vue": "^3.3.2",
     "vue-cookies": "^1.8.3",
-    "vue-router": "^4.2.0"
+    "vue-router": "^4.2.0",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",

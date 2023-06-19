@@ -1,58 +1,49 @@
 <template>
-  <div class="avatar"
-       :style="{
-    width:width+'px', 
-    height:width+'px',
-    'border-radius':width / 2 +'px',
-    }">
-    <el-image v-if="userId"
-              :style="{width:width+'px',
-    height:width+'px',
-    'border-radius':width / 2 +'px',}"
-              :src="proxy.globalInfo.avatarUrl + userId"
-              fit="scale-down"
-              loading="lazy"
-              @click="goToUcenter">
-    </el-image>
-    <div v-else class="no-login">Not signIn</div>
+  <div
+      class="avatar"
+      :style="{
+      width: width + 'px',
+      height: width + 'px',
+      'border-radius': width / 2 + 'px',
+    }"
+  >
+    <img :src="proxy.globalInfo.avatarUrl + userId" @click="goToUcenter" />
   </div>
 </template>
 
 <script setup>
-import {getCurrentInstance} from "vue";
-import {useRouter} from "vue-router";
-
-const {proxy} = getCurrentInstance();
-const router = useRouter();
-
+import { getCurrentInstance } from "vue";
+const { proxy } = getCurrentInstance();
 const props = defineProps({
   userId: {
     type: String,
   },
   width: {
     type: Number,
-    default: 60
+    default: 60,
   },
   addLink: {
     type: Boolean,
     default: true,
   },
 });
+
 const goToUcenter = () => {
   if (props.addLink) {
-    router.push("/user/" + proxy.userId);
+    window.open(proxy.globalInfo.webDomain + "user/" + props.userId, "_blank");
   }
 };
-
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .avatar {
-  cursor: pointer;
-  background: #f0f0f0;
+  display: flex;
+  background: rgb(238, 238, 238);
   align-items: center;
   overflow: hidden;
-
+  img {
+    max-width: 100%;
+  }
   .no-login {
     width: 100%;
     text-align: center;
@@ -60,3 +51,4 @@ const goToUcenter = () => {
   }
 }
 </style>
+

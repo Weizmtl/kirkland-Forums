@@ -9,6 +9,6 @@ const Confirm = (message, okfun) => {
         okfun();
     }).catch(() => {
 
-    });
-}
-export default Confirm;
+    })
+};
+export default confirm;

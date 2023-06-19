@@ -1,23 +1,27 @@
 <template>
-    <div>
-      <el-dialog
-        :model-value="show"
+  <div>
+    <el-dialog
         :show-close="showClose"
         :draggable="true"
+        :model-value="show"
         :close-on-click-modal="false"
         :title="title"
         class="cust-dialog"
+        :top="top + 'px'"
         :width="width"
-        :top="top"
         @close="close"
-      >
-      <div class="dialog-body">
+    >
+      <div class="dialog-body" :style="{ 'max-height': maxHeight + 'px' }">
         <slot></slot>
       </div>
       <template v-if="(buttons && buttons.length > 0) || showCancel">
         <div class="dialog-footer">
-          <el-button link @click="close" v-if="showCancel">取消</el-button>
-          <el-button v-for="btn in buttons" :type="btn.type" @click="btn.click">
+          <el-button link @click="close" v-if="showCancel"> Cancel </el-button>
+          <el-button
+              v-for="btn in buttons"
+              :type="btn.type || 'primary'"
+              @click="btn.click"
+          >
             {{ btn.text }}
           </el-button>
         </div>
@@ -28,34 +32,35 @@
 
 <script setup>
 const props = defineProps({
-  show: {
-    type: Boolean,
-    default: true,
-  },
   title: {
     type: String,
-    default: "标题",
+  },
+  show: {
+    type: Boolean,
+    default: false,
   },
   showClose: {
     type: Boolean,
     default: true,
   },
-  width: {
-    type: String,
-    default: "30%",
-  },
-  top: {
-    type: String,
-    default: "30px",
-  },
-  buttons: {
-    type: Array,
-  },
   showCancel: {
     type: Boolean,
     default: true,
   },
+  top: {
+    type: Number,
+    default: 50,
+  },
+  width: {
+    type: String,
+    default: "30%",
+  },
+  buttons: {
+    type: Array,
+  },
 });
+
+const maxHeight = window.innerHeight - props.top - 100;
 
 const emit = defineEmits();
 const close = () => {
@@ -65,7 +70,7 @@ const close = () => {
 
 <style lang="scss">
 .cust-dialog {
-  margin-bottom: 10px;
+  margin: 30px auto 10px !important;
   .el-dialog__body {
     padding: 0px;
   }
@@ -73,13 +78,12 @@ const close = () => {
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
     padding: 15px;
-    min-height: 100px;
-    max-height: calc(100vh - 190px);
+    min-height: 80px;
     overflow: auto;
   }
   .dialog-footer {
     text-align: right;
-    padding: 10px 20px;
+    padding: 5px 20px;
   }
 }
 </style>

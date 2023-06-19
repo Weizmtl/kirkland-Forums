@@ -1,91 +1,97 @@
 import axios from 'axios'
+
 import { ElLoading } from 'element-plus'
-import Message from "@/utils/Message"
+import router from '@/router'
 
-const contentTypeForm = "application/x-www-form-urlencoded;charset=UTF-8";
-const contentTypeJson = "application/json"
+import Message from '../utils/Message'
 
-const instance = axios.create({
-    baseURL: "/api",
-    timeout: 100 * 1000,
-})
+const contentTypeForm = 'application/x-www-form-urlencoded;charset=UTF-8'
+const contentTypeJson = 'application/json'
 
-// Pre-request filter
 let loading = null;
+const instance = axios.create({
+    baseURL: '/api',
+    timeout: 10 * 1000,
+});
+
 instance.interceptors.request.use(
     (config) => {
         if (config.showLoading) {
             loading = ElLoading.service({
                 lock: true,
-                text: "Loading",
-                background: 'rgba(0,0,0,0.7)'
-            })
+                text: 'Loading...',
+                background: 'rgba(0, 0, 0, 0.7)',
+            });
         }
         return config;
-    }, (error) => {
-        if (error.config.showLoading && loading) {
+    },
+    (error) => {
+        if (config.showLoading && loading) {
             loading.close();
         }
-        Message.error("Request sending failure");
-        return Promise.reject("Request sending failure");
+        Message.error("Request failed to send");
+        return Promise.reject("Request failed to send");
     }
 );
 
-//Post-request filters
 instance.interceptors.response.use(
     (response) => {
-        const { showLoading, errorCallback, showError } = response.config;
+        const { showLoading, errorCallback, showError = true } = response.config;
         if (showLoading && loading) {
-            loading.close();
+            loading.close()
         }
         const responseData = response.data;
+
         if (responseData.code == 200) {
             return responseData;
         } else if (responseData.code == 901) {
+
             setTimeout(() => {
                 router.push("/login")
             }, 2000);
-
-            return Promise.reject({ showError: true, msg: "Login Timeout" });
+            return Promise.reject({ showError: true, msg: "Timeout" });
         } else {
+
             if (errorCallback) {
-                errorCallback(responseData)
+                errorCallback(responseData.info);
             }
             return Promise.reject({ showError: showError, msg: responseData.info });
         }
-    }, (error) => {
+    },
+    (error) => {
         if (error.config.showLoading && loading) {
             loading.close();
         }
-        return Promise.reject({ showError: true, msg: "Network anomaly" });
+        return Promise.reject({ showError: true, msg: "network anomaly" })
     }
 );
 
 const request = (config) => {
-    const { url, params, dataType, showLoading = true, errorCallback, showError = true } = config
+    const { url, params, dataType, showLoading = true } = config;
     let contentType = contentTypeForm;
-    let fromData = new FormData();
+    let formData = new FormData();
     for (let key in params) {
-        fromData.append(key, params[key] == undefined ? "" : params[key]);
+        formData.append(key, params[key] == undefined ? "" : params[key]);
     }
-    if (dataType != null && dataType === "json") {
+    if (dataType != null && dataType == 'json') {
         contentType = contentTypeJson;
     }
     let headers = {
         'Content-Type': contentType,
         'X-Requested-With': 'XMLHttpRequest',
     }
-    return instance.post(url, fromData, {
+    return instance.post(url, formData, {
         headers: headers,
         showLoading: showLoading,
-        errorCallback: errorCallback,
-        showError: showError
+        errorCallback: config.errorCallback,
+        showError: config.showError
     }).catch(error => {
+        console.log(error);
         if (error.showError) {
             Message.error(error.msg);
         }
         return null;
-    })
-}
+    });
+};
 
 export default request;

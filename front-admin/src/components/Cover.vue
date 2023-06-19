@@ -1,35 +1,31 @@
 <template>
-    <div class="cover" :style="{ width: width + 'px', height: width + 'px' }">
-        <el-image
-                :style="{ width: width + 'px', height: width + 'px' }"
-                fit="scale-down" loading="lazy"
-                :src="cover ? proxy.globalInfo.imageUrl + cover : localCover">
-        </el-image>
-    </div>
+  <div class="cover">
+    <img :src="proxy.globalInfo.imageUrl + cover" v-if="cover" />
+    <img v-else src="../assets/default_cover.png" />
+  </div>
 </template>
 
-
 <script setup>
-import {getCurrentInstance} from "vue";
-const {proxy} = getCurrentInstance();
-const localCover = new URL("@/assets/kirkland.png", import.meta.url).href;
+import { getCurrentInstance, reactive } from "vue";
+
 const props = defineProps({
-    cover: {
-        type: String,
-    },
-    width: {
-        type: Number,
-        default: 60,
-    },
+  cover: {
+    type: String,
+  },
 });
-
-
+const { proxy } = getCurrentInstance();
 </script>
-
-<style lang="scss" scoped>
-.cover{
-    background: #ddd;
-    border-radius: 5px;
-    overflow: hidden;
+<style lang="scss">
+.cover {
+  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  overflow: hidden;
+  img {
+    width: 100%;
+  }
 }
 </style>

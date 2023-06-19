@@ -5,7 +5,7 @@
         <el-col :span="4">
           <el-form-item label="Title" prop="titleFuzzy">
             <el-input
-                placeholder="Please enter a title"
+                placeholder="Please input a title"
                 v-model="searchFormData.titleFuzzy"
                 clearable
                 @keyup.enter.native="loadDataList"
@@ -14,9 +14,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="4">
-          <el-form-item label="Nickname" prop="nickNameFuzzy">
+          <el-form-item label="Nick Name" prop="nickNameFuzzy">
             <el-input
-                placeholder="Please enter a nickname"
+                placeholder="Please input nickname"
                 v-model="searchFormData.nickNameFuzzy"
                 clearable
                 @keyup.enter.native="loadDataList"
@@ -25,9 +25,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="4">
-          <el-form-item label="Board" prop="boardIds">
+          <el-form-item label="board" prop="sex">
             <el-cascader
-                placeholder="Please select a board"
+                placeholder="Please select board"
                 :options="boardList"
                 :props="boardProps"
                 clearable
@@ -37,24 +37,24 @@
           </el-form-item>
         </el-col>
         <el-col :span="4">
-          <el-form-item label="Attachment" prop="attachmentType">
+          <el-form-item label="attachment" prop="sex">
             <el-select
                 v-model="searchFormData.attachmentType"
                 clearable
                 placeholder="Please select"
                 :style="{ width: '100%' }"
             >
-              <el-option :value="1" label="Yes"></el-option>
-              <el-option :value="0" label="No"></el-option>
+              <el-option :value="1" label="with attachment"></el-option>
+              <el-option :value="0" label="no attachment"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="4">
-          <el-form-item label="Status" prop="status">
+          <el-form-item label="status" prop="status">
             <el-select
                 v-model="searchFormData.status"
                 clearable
-                placeholder="Please select status"
+                placeholder="please select status"
                 :style="{ width: '100%' }"
             >
               <el-option :value="-1" label="deleted"></el-option>
@@ -66,15 +66,15 @@
       </el-row>
       <el-row>
         <el-col :span="4">
-          <el-form-item label="top" prop="topType">
+          <el-form-item label="Top" prop="topType">
             <el-select
                 v-model="searchFormData.topType"
                 clearable
                 placeholder="Please select"
                 :style="{ width: '100%' }"
             >
-              <el-option :value="0" label="not on top"></el-option>
-              <el-option :value="1" label="top"></el-option>
+              <el-option :value="0" label="Untop"></el-option>
+              <el-option :value="1" label="Top"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -85,138 +85,147 @@
                 type="success"
                 @click="auditBatch"
                 :disabled="selectBatchList.length == 0"
-            >Batch approval</el-button
+            >Batch review</el-button
             >
             <el-button
                 type="danger"
                 @click="delBatch"
                 :disabled="selectBatchList.length == 0"
-            >Batch Remove</el-button
+            >Batch delete</el-button
             >
           </el-button-group>
         </el-col>
       </el-row>
     </el-form>
   </div>
-    <div class="data-list">
-      <Table
-          ref="tableRef"
-          :columns="columns"
-          :showPagination="true"
-          :dataSource="tableData"
-          :fetch="loadDataList"
-          :options="tableOptions"
-          @rowSelected="setRowSelected"
-      >
-        <!-- User info -->
-        <template #userInfo="{ index, row }">
-          <div class="user-info">
-            <Avatar :userId="row.userId" :width="50"></Avatar>
-            <div class="name-info">
-              <div>
-                <a
-                    :href="proxy.globalInfo.webDomain + 'user/' + row.userId"
-                    target="_blank"
-                    class="a-link"
-                >{{ row.nickName }}</a
-                >
-              </div>
-              <div>{{ row.userIpAddress }}</div>
+  <div class="data-list">
+    <Table
+        ref="tableRef"
+        :columns="columns"
+        :showPagination="true"
+        :dataSource="tableData"
+        :fetch="loadDataList"
+        :options="tableOptions"
+        @rowSelected="setRowSelected"
+    >
+      <!-- User info -->
+      <template #userInfo="{ index, row }">
+        <div class="user-info">
+          <Avatar :userId="row.userId" :width="50"></Avatar>
+          <div class="name-info">
+            <div>
+              <a
+                  :href="proxy.globalInfo.webDomain + 'user/' + row.userId"
+                  target="_blank"
+                  class="a-link"
+              >{{ row.nickName }}</a
+              >
             </div>
+            <div>{{ row.userIpAddress }}</div>
           </div>
-        </template>
-        <!--Cover-->
-        <template #cover="{ index, row }">
-          <Cover :cover="row.cover"></Cover>
-        </template>
-        <!--Title-->
-        <template #titleInfo="{ index, row }">
-          <a
+        </div>
+      </template>
+      <!--Cover-->
+      <template #cover="{ index, row }">
+        <Cover :cover="row.cover"></Cover>
+      </template>
+      <!--Title-->
+      <template #titleInfo="{ index, row }">
+        <a
+            class="a-link"
+            target="_blank"
+            tag="a"
+            :href="proxy.globalInfo.webDomain + 'post/' + row.articleId"
+        >{{ row.title }}</a
+        >
+      </template>
+      <!--Board-->
+      <template #boardInfo="{ index, row }">
+        <div>
+          <span>{{ row.pBoardName }}</span>
+          <span v-if="row.boardName">/{{ row.boardName }}</span>
+        </div>
+      </template>
+      <!--Interactive info-->
+      <template #interactionInfo="{ index, row }">
+        <div>view：{{ row.readCount }}</div>
+        <div>like：{{ row.goodCount }}</div>
+        <div>
+          comment：<span>{{ row.commentCount }}</span>
+          <span
               class="a-link"
-              target="_blank"
-              tag="a"
-              :href="proxy.globalInfo.webDomain + 'post/' + row.articleId"
-          >{{ row.title }}</a
+              :style="{ 'margin-left': '5px' }"
+              @click="showComment(row.articleId)"
+              v-if="row.commentCount"
+          >check</span
           >
-        </template>
-        <!--Board-->
-        <template #boardInfo="{ index, row }">
-          <div>
-            <span>{{ row.pBoardName }}</span>
-            <span v-if="row.boardName">/{{ row.boardName }}</span>
-          </div>
-        </template>
-        <!--Interactive info-->
-        <template #interactionInfo="{ index, row }">
-          <div>Read：{{ row.readCount }}</div>
-          <div>Like：{{ row.goodCount }}</div>
-          <div>
-            Comment：<span>{{ row.commentCount }}</span>
-            <span
-                class="a-link"
-                :style="{ 'margin-left': '5px' }"
-                @click="showComment(row.articleId)"
-                v-if="row.commentCount"
-            >View</span
-            >
-          </div>
-        </template>
-        <!--Attachment info-->
-        <template #attachmentInfo="{ index, row }">
-          <div v-if="row.attachmentType == 0">none attachment</div>
-          <div v-if="row.attachmentType == 1">
+        </div>
+      </template>
+      <!--attachment info-->
+      <template #attachmentInfo="{ index, row }">
+        <div v-if="row.attachmentType == 0">no attachment</div>
+        <div v-if="row.attachmentType == 1">
           <span
               @click="showAttachment(row.nickName, row.articleId)"
               class="a-link"
-          >Check attachment</span
+          >check attachment</span
           >
-          </div>
-        </template>
-        <!--Status-->
-        <template #statusInfo="{ index, row }">
-          <span v-if="row.status == -1" :style="{ color: 'red' }">Deleted</span>
-          <span v-if="row.status == 0" :style="{ color: 'red' }">To be review</span>
-          <span v-if="row.status == 1" :style="{ color: 'green' }">Reviewed</span>
-          <div v-if="row.topType == 1" :style="{ color: 'green' }">Top</div>
-          <div v-if="row.topType == 0" :style="{ color: 'green' }">Untop</div>
-        </template>
-        <!--Operation info-->
-        <template #op="{ index, row }">
-          <div class="op" v-if="row.status != -1">
-            <el-dropdown trigger="click">
-              <span class="iconfont icon-more"> </span>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item @click="updateBoard(row)"
-                  >modify</el-dropdown-item
-                  >
-                  <el-dropdown-item
-                      @click="topArticle(row)"
-                      v-if="row.topType == 1 && row.status == 1"
-                  >cancel top</el-dropdown-item
-                  >
-                  <el-dropdown-item
-                      @click="topArticle(row)"
-                      v-if="row.topType == 0 && row.status == 1"
-                  >Top</el-dropdown-item
-                  >
-                  <el-dropdown-item @click="delArticle(row)"
-                  >Delete</el-dropdown-item
-                  >
-                  <el-dropdown-item @click="audit(row)" v-if="row.status == 0"
-                  >Review</el-dropdown-item
-                  >
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-          </div>
-        </template>
-      </Table>
-    </div>
+        </div>
+      </template>
+      <!--status-->
+      <template #statusInfo="{ index, row }">
+        <span v-if="row.status == -1" :style="{ color: 'red' }">Deleted</span>
+        <span v-if="row.status == 0" :style="{ color: 'red' }">To be review</span>
+        <span v-if="row.status == 1" :style="{ color: 'green' }">Reviewed</span>
+        <div v-if="row.topType == 1" :style="{ color: 'green' }">Top</div>
+        <div v-if="row.topType == 0" :style="{ color: 'green' }">Untop</div>
+      </template>
+      <!--Operation info-->
+      <template #op="{ index, row }">
+        <div class="op" v-if="row.status != -1">
+          <el-dropdown trigger="click">
+            <span class="iconfont icon-more"> </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="updateBoard(row)"
+                >modify board</el-dropdown-item
+                >
+                <el-dropdown-item
+                    @click="topArticle(row)"
+                    v-if="row.topType == 1 && row.status == 1"
+                >Untop</el-dropdown-item
+                >
+                <el-dropdown-item
+                    @click="topArticle(row)"
+                    v-if="row.topType == 0 && row.status == 1"
+                >Top</el-dropdown-item
+                >
+                <el-dropdown-item @click="delArticle(row)"
+                >Delete</el-dropdown-item
+                >
+                <el-dropdown-item @click="audit(row)" v-if="row.status == 0"
+                >Review</el-dropdown-item
+                >
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </div>
+      </template>
+    </Table>
+  </div>
+  <!--Modify board-->
+  <ArticleBoard ref="articleBoardRef" @reload="loadDataList"></ArticleBoard>
+  <!--check attachment-->
+  <ArticleAttachmentt ref="attachmenttRef"></ArticleAttachmentt>
+  <!--view comment-->
+  <ArticleComment ref="commentRef"></ArticleComment>
 </template>
-<script>
-import {getCurrentInstance, reactive, ref, toRaw} from "vue";
 
+<script setup>
+import ArticleBoard from "./ArticleBoard.vue";
+import ArticleAttachmentt from "./ArticleAttachmentt.vue";
+import ArticleComment from "./ArticleComment.vue";
+import { getCurrentInstance, reactive, ref, toRaw } from "vue";
 const { proxy } = getCurrentInstance();
 
 const api = {
@@ -227,16 +236,14 @@ const api = {
   auditArticle: "/forum/auditArticle",
 };
 
-//Search
-const searchFormData = reactive({});
-
-//Colum List
-const columns = [{
-  label: "User info",
-  prop: "avatar",
-  width: 200,
-  scopedSlots: "userInfo",
-},
+//Table
+const columns = [
+  {
+    label: "User info",
+    prop: "avatar",
+    width: 200,
+    scopedSlots: "userInfo",
+  },
   {
     label: "Cover",
     width: 100,
@@ -253,7 +260,7 @@ const columns = [{
     scopedSlots: "boardInfo",
   },
   {
-    label: "Interactive info",
+    label: "Interaction info",
     width: 150,
     scopedSlots: "interactionInfo",
   },
@@ -275,7 +282,7 @@ const columns = [{
     width: 180,
   },
   {
-    label: "IP",
+    label: "Post IP",
     prop: "userIpAddress",
     width: 100,
   },
@@ -284,47 +291,16 @@ const columns = [{
     prop: "op",
     width: 80,
     scopedSlots: "op",
-  },];
+  },
+];
 
-
+//Search
+const searchFormData = reactive({});
+//Table
 const tableData = ref({});
 const tableOptions = {
   extHeight: 90,
   selectType: "checkbox",
-};
-
-//obtain board
-const boardProps = {
-  multiple: false,
-  checkStrictly: true,
-  value: "boardId",
-  label: "boardName",
-};
-const boardList = ref([]);
-const loadBoardList = async () => {
-  let result = await proxy.Request({
-    url: api.loadBoard,
-  });
-  if (!result) {
-    return;
-  }
-  boardList.value = result.data;
-};
-loadBoardList();
-
-const selectBatchList = ref([]);
-const setRowSelected = (rows) => {
-  selectBatchList.value = [];
-  rows.forEach((element) => {
-    selectBatchList.value.push(element.articleId);
-  });
-};
-const tableRef = ref();
-
-//Modify board
-const articleBoardRef = ref();
-const updateBoard = (row) => {
-  articleBoardRef.value.updateBoard(row);
 };
 
 const loadDataList = async () => {
@@ -351,6 +327,42 @@ const loadDataList = async () => {
   tableData.value = result.data;
 };
 
+//obtain board
+const boardProps = {
+  multiple: false,
+  checkStrictly: true,
+  value: "boardId",
+  label: "boardName",
+};
+const boardList = ref([]);
+const loadBoardList = async () => {
+  let result = await proxy.Request({
+    url: api.loadBoard,
+  });
+  if (!result) {
+    return;
+  }
+  boardList.value = result.data;
+};
+loadBoardList();
+
+//modify board
+const articleBoardRef = ref();
+const updateBoard = (row) => {
+  articleBoardRef.value.updateBoard(row);
+};
+
+//check attachment
+const attachmenttRef = ref();
+const showAttachment = (nickName, articleId) => {
+  attachmenttRef.value.show(nickName, articleId);
+};
+//view comment
+const commentRef = ref();
+const showComment = (articleId) => {
+  commentRef.value.show(articleId);
+};
+
 //review
 const audit = (data) => {
   proxy.Confirm(`Do you want to review【${data.title}】?`, async () => {
@@ -369,7 +381,7 @@ const audit = (data) => {
 
 //delete
 const delArticle = (data) => {
-  proxy.Confirm(`你确定要删除【${data.title}】`, async () => {
+  proxy.Confirm(`Do you want to delete【${data.title}】`, async () => {
     let result = await proxy.Request({
       url: api.delArticle,
       params: {
@@ -383,10 +395,10 @@ const delArticle = (data) => {
   });
 };
 
-//top
+//Top
 const topArticle = (data) => {
-  const opName = data.topType == 0 ? "SetTop" : "UnsetTop";
-  proxy.Confirm(`Do you want to set the top【${data.title}】 ${opName}`, async () => {
+  const opName = data.topType == 0 ? "Set to top" : "Untop";
+  proxy.Confirm(`Do you want to make【${data.title}】 ${opName} top`, async () => {
     let result = await proxy.Request({
       url: api.topArticle,
       params: {
@@ -401,9 +413,18 @@ const topArticle = (data) => {
   });
 };
 
-//batch review
+const selectBatchList = ref([]);
+const setRowSelected = (rows) => {
+  selectBatchList.value = [];
+  rows.forEach((element) => {
+    selectBatchList.value.push(element.articleId);
+  });
+};
+const tableRef = ref();
+
+//batch audit
 const auditBatch = (data) => {
-  proxy.Confirm(`Do you want batch review?`, async () => {
+  proxy.Confirm(`Do you want to do batch audit？`, async () => {
     let result = await proxy.Request({
       url: api.auditArticle,
       params: {
@@ -420,7 +441,7 @@ const auditBatch = (data) => {
 
 //batch delete
 const delBatch = (data) => {
-  proxy.Confirm(`Do you want batch delete?？`, async () => {
+  proxy.Confirm(`Do you want to make batch delete？`, async () => {
     let result = await proxy.Request({
       url: api.delArticle,
       params: {
@@ -434,7 +455,6 @@ const delBatch = (data) => {
     loadDataList();
   });
 };
-
 </script>
 
 <style lang="scss">
@@ -442,13 +462,11 @@ const delBatch = (data) => {
   .user-info {
     display: flex;
     align-items: center;
-
     .name-info {
       margin-left: 5px;
       font-size: 13px;
     }
   }
-
   .op {
     .iconfont {
       cursor: pointer;
