@@ -49,10 +49,89 @@
       </el-row>
     </el-form>
   </div>
+  <div class="data-list">
+    <Table
+        ref="tableRef"
+        :columns="columns"
+        :showPagination="true"
+        :dataSource="tableData"
+        :fetch="loadDataList"
+        :options="tableOptions"
+        @rowSelected="setRowSelected"
+    >
+      <!-- user info -->
+      <template #userInfo="{ index, row }">
+        <div class="user-info">
+          <Avatar :userId="row.userId" :width="50"></Avatar>
+          <div class="name-info">
+            <div>
+              <a
+                  :href="proxy.globalInfo.webDomain + 'user/' + row.userId"
+                  target="_blank"
+                  class="a-link"
+              >{{ row.nickName }}</a
+              >
+            </div>
+            <div>{{ row.userIpAddress }}</div>
+          </div>
+        </div>
+      </template>
+    </Table>
+  </div>
 </template>
 
 <script>
+import CommentImage from "./CommentImage.vue";
+import { getCurrentInstance, reactive, ref, toRaw } from "vue";
+const { proxy } = getCurrentInstance();
 
+const api = {
+  loadDataList: "/forum/loadComment",
+  delComment: "/forum/delComment",
+  auditComment: "/forum/auditComment",
+};
+
+//列表
+const columns = [
+  {
+    label: "user info",
+    prop: "avatar",
+    width: 200,
+    scopedSlots: "userInfo",
+  },
+  {
+    label: "comment content",
+    prop: "content",
+    scopedSlots: "contentInfo",
+  },
+  {
+    label: "like",
+    width: 150,
+    prop: "goodCount",
+  },
+  {
+    label: "status",
+    prop: "status",
+    width: 100,
+    scopedSlots: "statusInfo",
+  },
+  {
+    label: "post date",
+    prop: "postTime",
+    width: 180,
+  },
+  {
+    label: "post ip",
+    prop: "userIpAddress",
+    width: 100,
+  },
+  {
+    label: "operation",
+    prop: "op",
+    width: 80,
+    scopedSlots: "op",
+  },
+];
 </script>
 
 <style scoped>
