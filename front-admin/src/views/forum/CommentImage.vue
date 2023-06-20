@@ -11,7 +11,7 @@
   />
 </template>
 
-<script>
+<script setup>
 import { getCurrentInstance } from "vue";
 const { proxy } = getCurrentInstance();
 const props = defineProps({
@@ -24,7 +24,7 @@ const props = defineProps({
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .comment-img {
   width: 80px;
   height: 80px;
