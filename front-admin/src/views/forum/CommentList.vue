@@ -132,8 +132,129 @@ const columns = [
     scopedSlots: "op",
   },
 ];
+//Search
+const searchFormData = reactive({});
+//table
+const tableData = ref({});
+const tableOptions = {
+  extHeight: 50,
+  selectType: "checkbox",
+};
+
+const loadDataList = async () => {
+  let params = {
+    pageNo: tableData.value.pageNo,
+    pageSize: tableData.value.pageSize,
+  };
+  Object.assign(params, searchFormData);
+  params.boardIds = toRaw(params.boardIds) || [];
+  if (params.boardIds.length == 1) {
+    params.pBoardId = params.boardIds[0];
+  } else if (params.boardIds.length == 2) {
+    params.pBoardId = params.boardIds[0];
+    params.boardId = params.boardIds[1];
+  }
+  delete params.boardIds;
+  let result = await proxy.Request({
+    url: api.loadDataList,
+    params,
+  });
+  if (!result) {
+    return;
+  }
+  tableData.value = result.data;
+};
+
+//delete
+const delComment = (data) => {
+  proxy.Confirm(`Do you want to delete this comment？`, async () => {
+    let result = await proxy.Request({
+      url: api.delComment,
+      params: {
+        commentIds: data.commentId,
+      },
+    });
+    if (!result) {
+      return;
+    }
+    loadDataList();
+  });
+};
+
+//审核
+const audit = (data) => {
+  proxy.Confirm(`Do you want to review this comment？`, async () => {
+    let result = await proxy.Request({
+      url: api.auditComment,
+      params: {
+        commentIds: data.commentId,
+      },
+    });
+    if (!result) {
+      return;
+    }
+    loadDataList();
+  });
+};
+
+const selectBatchList = ref([]);
+const setRowSelected = (rows) => {
+  selectBatchList.value = [];
+  rows.forEach((element) => {
+    selectBatchList.value.push(element.commentId);
+  });
+};
+const tableRef = ref();
+
+//batch review
+const auditBatch = (data) => {
+  proxy.Confirm(`Do you want to batch review？`, async () => {
+    let result = await proxy.Request({
+      url: api.auditComment,
+      params: {
+        commentIds: selectBatchList.value.join(","),
+      },
+    });
+    if (!result) {
+      return;
+    }
+    tableRef.value.clearSelection();
+    loadDataList();
+  });
+};
+
+//batch delete
+const delBatch = (data) => {
+  proxy.Confirm(`Do you want to batch delete？`, async () => {
+    let result = await proxy.Request({
+      url: api.delComment,
+      params: {
+        commentIds: selectBatchList.value.join(","),
+      },
+    });
+    if (!result) {
+      return;
+    }
+    tableRef.value.clearSelection();
+    loadDataList();
+  });
+};
 </script>
 
-<style scoped>
-
+<style lang="scss">
+.data-list {
+  .user-info {
+    display: flex;
+    align-items: center;
+    .name-info {
+      margin-left: 5px;
+      font-size: 13px;
+    }
+  }
+  .op {
+    .iconfont {
+      cursor: pointer;
+    }
+  }
+}
 </style>
