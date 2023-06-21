@@ -100,6 +100,13 @@
 </template>
 
 <script>
+import { getCurrentInstance, reactive, ref } from "vue";
+const { proxy } = getCurrentInstance();
+
+const api = {
+  loadDataList: "/user/loadUserList",
+  updateUserStatus: "/user/updateUserStatus",
+};
 
 </script>
 
