@@ -100,6 +100,7 @@
 </template>
 
 <script>
+import SendMessage from "./SendMessage.vue";
 import { getCurrentInstance, reactive, ref } from "vue";
 const { proxy } = getCurrentInstance();
 
@@ -108,6 +109,61 @@ const api = {
   updateUserStatus: "/user/updateUserStatus",
 };
 
+//列表
+const columns = [
+  {
+    label: "avatar",
+    prop: "avatar",
+    width: 80,
+    scopedSlots: "avatar",
+  },
+  {
+    label: "nickname",
+    prop: "nickName",
+    width: 150,
+    scopedSlots: "nickName",
+  },
+  {
+    label: "email",
+    prop: "email",
+    width: 180,
+  },
+  {
+    label: "persondesc",
+    prop: "personDescription",
+  },
+  {
+    label: "jointime",
+    prop: "joinTime",
+    width: 180,
+  },
+  {
+    label: "login time",
+    prop: "lastLoginTime",
+    width: 260,
+    scopedSlots: "loginInfo",
+  },
+  {
+    label: "credit",
+    prop: "totalIntegral",
+    width: 150,
+    scopedSlots: "integral",
+  },
+  {
+    label: "status",
+    prop: "status",
+    scopedSlots: "status",
+    width: 60,
+  },
+  {
+    label: "operation",
+    prop: "op",
+    width: 80,
+    scopedSlots: "op",
+  },
+];
+//search
+const searchFormData = reactive({});
 </script>
 
 <style scoped>
