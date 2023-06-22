@@ -91,7 +91,7 @@ const api = {
   auditComment: "/forum/auditComment",
 };
 
-//列表
+//list
 const columns = [
   {
     label: "user info",
@@ -181,7 +181,7 @@ const delComment = (data) => {
   });
 };
 
-//审核
+//review
 const audit = (data) => {
   proxy.Confirm(`Do you want to review this comment？`, async () => {
     let result = await proxy.Request({

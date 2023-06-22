@@ -59,7 +59,7 @@
         </template>
       </template>
     </el-table>
-    <!-- 分页 -->
+    <!-- Paging -->
     <div class="pagination" v-if="showPagination">
       <el-pagination
           v-if="dataSource.totalCount"

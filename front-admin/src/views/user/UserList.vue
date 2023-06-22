@@ -164,8 +164,55 @@ const columns = [
 ];
 //search
 const searchFormData = reactive({});
+//list
+const tableData = ref({});
+const tableOptions = {
+  extHeight: 50,
+};
+
+const loadDataList = async () => {
+  let params = {
+    pageNo: tableData.value.pageNo,
+    pageSize: tableData.value.pageSize,
+  };
+
+  Object.assign(params, searchFormData);
+  let result = await proxy.Request({
+    url: api.loadDataList,
+    params,
+  });
+  if (!result) {
+    return;
+  }
+  tableData.value = result.data;
+};
+
+//disable
+const updateUserStatus = (data) => {
+  const title = data.status == 1 ? "disable" : "able";
+  proxy.Confirm(`are you sure${title}user${data.nickName}`, async () => {
+    let result = await proxy.Request({
+      url: api.updateUserStatus,
+      params: {
+        userId: data.userId,
+        status: data.status == 1 ? 0 : 1,
+      },
+    });
+    if (!result) {
+      return;
+    }
+    loadDataList();
+  });
+};
+
+const sendMessageRef = ref();
+const sendMessage = (row) => {
+  sendMessageRef.value.sendMessage(row);
+};
 </script>
 
-<style scoped>
-
+<style lang="scss">
+.op {
+  cursor: pointer;
+}
 </style>
