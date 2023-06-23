@@ -38,12 +38,68 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "SendMessage"
-}
+<script setup>
+import { ref, reactive, getCurrentInstance, nextTick } from "vue";
+const { proxy } = getCurrentInstance();
+
+const api = {
+  sendMessage: "/user/sendMessage",
+};
+
+const dialogConfig = reactive({
+  show: false,
+  title: "Send message",
+  buttons: [
+    {
+      text: "Ok",
+      click: (e) => {
+        submitForm();
+      },
+    },
+  ],
+});
+
+const formData = ref({});
+const formDataRef = ref();
+const rules = {
+  message: [{ required: true, message: "Please input a message" }],
+};
+
+const sendMessage = (data) => {
+  dialogConfig.show = true;
+  nextTick(() => {
+    formDataRef.value.resetFields();
+    formData.value = {
+      userId: data.userId,
+      nickName: data.nickName,
+    };
+  });
+};
+defineExpose({ sendMessage });
+
+const emit = defineEmits(["reload"]);
+//submit form
+const submitForm = () => {
+  formDataRef.value.validate(async (valid) => {
+    if (!valid) {
+      return;
+    }
+    let params = {};
+    Object.assign(params, formData.value);
+    let result = await proxy.Request({
+      url: api.sendMessage,
+      params,
+    });
+    if (!result) {
+      return;
+    }
+    dialogConfig.show = false;
+
+    proxy.Message.success("send successfully");
+    emit("reload");
+  });
+};
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
 </style>
