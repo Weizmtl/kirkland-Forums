@@ -44,6 +44,26 @@
             </el-form-item>
           </el-col>
         </el-row>
+
+        <el-divider content-position="left">review setting</el-divider>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="Whether article need to be review" prop="postAudit">
+              <el-radio-group v-model="formData.postAudit">
+                <el-radio :label="false">no</el-radio>
+                <el-radio :label="true">yes</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="Whether comment need to be review" prop="commentAudit">
+              <el-radio-group v-model="formData.commentAudit">
+                <el-radio :label="false">no</el-radio>
+                <el-radio :label="true">yes</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
     </div>
 </template>
