@@ -101,6 +101,42 @@
             </el-form-item></el-col
           >
         </el-row>
+
+        <el-divider content-position="left">comment setting</el-divider>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="Whether to open comments" prop="commentOpen">
+              <el-radio-group v-model="formData.commentOpen">
+                <el-radio :label="true">able</el-radio>
+                <el-radio :label="false">disable</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="comment credit" prop="commentIntegral">
+              <el-input
+                  v-model="formData.commentIntegral"
+                  placeholder="Please enter the number of points you can earn for your comments"
+              >
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item
+                label="Number of comments allowed per day"
+                prop="commentDayCountThreshold"
+            >
+              <el-input
+                  v-model="formData.commentDayCountThreshold"
+                  placeholder="Please enter the number of comments you can post per day"
+              >
+              </el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
       </el-form>
     </div>
 </template>
