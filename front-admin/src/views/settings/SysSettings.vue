@@ -64,6 +64,43 @@
             </el-form-item>
           </el-col>
         </el-row>
+
+        <el-divider content-position="left">post setting</el-divider>
+        <el-row>
+          <el-col :span="12"
+          ><el-form-item label="post credits" prop="postIntegral">
+            <el-input
+                v-model="formData.postIntegral"
+                placeholder="Please enter the number of points you can earn for Posting"
+            >
+            </el-input>
+          </el-form-item>
+            <el-form-item label="Number of posts per day" prop="postDayCountThreshold">
+              <el-input
+                  v-model="formData.postDayCountThreshold"
+                  placeholder="Please enter the number of posts per day"
+              >
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="Number of images that can be uploaded per day" prop="dayImageUploadCount">
+              <el-input
+                  v-model="formData.dayImageUploadCount"
+                  placeholder="Please enter the number of images you can upload per day"
+              >
+              </el-input>
+            </el-form-item>
+            <el-form-item label="Allowable attachment size（MB）" prop="attachmentSize">
+              <el-input
+                  v-model="formData.attachmentSize"
+                  placeholder="Please enter the maximum allowed size of the attachment"
+              >
+                <template #append>MB</template>
+              </el-input>
+            </el-form-item></el-col
+          >
+        </el-row>
       </el-form>
     </div>
 </template>
