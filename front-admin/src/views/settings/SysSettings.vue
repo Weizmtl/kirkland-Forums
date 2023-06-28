@@ -150,7 +150,7 @@
           ></el-row>
 
         <el-form-item label="">
-          <el-button type="primary" @click="saveSetting">保存</el-button>
+          <el-button type="primary" @click="saveSetting">save</el-button>
         </el-form-item>
 
       </el-form>
