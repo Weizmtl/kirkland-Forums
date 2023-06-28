@@ -137,6 +137,22 @@
           </el-col>
         </el-row>
 
+        <el-divider content-position="left">like setting</el-divider>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="Number of likes per day" prop="likeDayCountThreshold">
+              <el-input
+                  v-model="formData.likeDayCountThreshold"
+                  placeholder="Please enter the number of likes per day"
+              >
+              </el-input>
+            </el-form-item> </el-col
+          ></el-row>
+
+        <el-form-item label="">
+          <el-button type="primary" @click="saveSetting">保存</el-button>
+        </el-form-item>
+
       </el-form>
     </div>
 </template>
