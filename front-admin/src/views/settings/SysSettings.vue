@@ -158,7 +158,72 @@
 </template>
 
 <script>
+import { getCurrentInstance, ref } from "vue";
+const { proxy } = getCurrentInstance();
+const api = {
+  loadSetting: "/setting/getSetting",
+  saveSetting: "/setting/saveSetting",
+};
+const formData = ref({});
 
+const rules = {
+  registerWelcomInfo: [{ required: true, message: "Please enter a welcome message" }],
+  emailTitle: [{ required: true, message: "Please enter email title" }],
+  emailContent: [{ required: true, message: "Please enter email content" }],
+
+  postAudit: [{ required: true, message: "Please select whether the article needs to be reviewed" }],
+  commentAudit: [{ required: true, message: "Please select whether the comments needs to be reviewed" }],
+  postIntegral: [
+    { required: true, message: "please input post credits" },
+    {
+      validator: proxy.Verify.number,
+      message: "please input correct number",
+    },
+  ],
+  postDayCountThreshold: [
+    { required: true, message: "Please enter the number of posts per day" },
+    {
+      validator: proxy.Verify.number,
+      message: "please input correct number",
+    },
+  ],
+  dayImageUploadCount: [
+    { required: true, message: "Please enter the number of images you can upload per day" },
+    {
+      validator: proxy.Verify.number,
+      message: "please input correct number",
+    },
+  ],
+  dayImageUploadCount: [
+    { required: true, message: "Please enter the maximum allowed size of the attachment" },
+    {
+      validator: proxy.Verify.number,
+      message: "please input correct number",
+    },
+  ],
+  commentOpen: [{ required: true, message: "Please select whether to enable comments" }],
+  commentIntegral: [
+    { required: true, message: "Please enter the number of points you can earn for your comments" },
+    {
+      validator: proxy.Verify.number,
+      message: "please input correct number",
+    },
+  ],
+  commentDayCountThreshold: [
+    { required: true, message: "Please enter the number of comments you can post per day" },
+    {
+      validator: proxy.Verify.number,
+      message: "please input correct number",
+    },
+  ],
+  likeDayCountThreshold: [
+    { required: true, message: "Please enter the number of liked you can post per day" },
+    {
+      validator: proxy.Verify.number,
+      message: "please input correct number",
+    },
+  ],
+};
 </script>
 
 <style scoped>
