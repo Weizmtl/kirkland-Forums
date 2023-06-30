@@ -224,8 +224,39 @@ const rules = {
     },
   ],
 };
+const formDataRef = ref();
+
+const getSetting = async () => {
+  let result = await proxy.Request({
+    url: api.loadSetting,
+  });
+  if (!result) {
+    return;
+  }
+  let resultData = result.data;
+  for (let item in resultData) {
+    let subData = resultData[item];
+    if (subData != null) {
+      for (let sub in subData) {
+        formData.value[sub] = subData[sub];
+      }
+    }
+  }
+  console.log(formData.value);
+};
+getSetting();
+
+const saveSetting = async () => {
+  let result = await proxy.Request({
+    url: api.saveSetting,
+    params: formData.value,
+  });
+  if (!result) {
+    return;
+  }
+  proxy.Message.success("save successfully");
+};
 </script>
 
-<style scoped>
-
+<style lang="scss">
 </style>
