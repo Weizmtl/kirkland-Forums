@@ -113,14 +113,57 @@
                     index == tableData.list.length - 1 ? 'not-allow' : 'a-link',
                   ]"
                     @click="changeSort(index, 'down', 1)"
-                >down</a
-                >
+                >down</a>
               </div>
             </template>
           </Table>
         </el-card>
       </el-col>
     </el-row>
+    <Dialog
+        :show="dialogConfig.show"
+        :title="dialogConfig.title"
+        :buttons="dialogConfig.buttons"
+        width="550px"
+        @close="dialogConfig.show = false"
+    >
+      <el-form
+          :model="formData"
+          :rules="rules"
+          ref="formDataRef"
+          label-width="110px"
+      >
+        <el-form-item
+            label="first board"
+            prop="boardName"
+            v-if="formData.boardType == 1"
+        >
+          {{ formData.pBoardName }}
+        </el-form-item>
+        <el-form-item label="board name" prop="boardName">
+          <el-input placeholder="please input name" v-model="formData.boardName">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="Posting permission" prop="postType">
+          <el-radio-group v-model="formData.postType">
+            <el-radio :label="1">{{ postTypeMap[1] }}</el-radio>
+            <el-radio :label="0">{{ postTypeMap[0] }}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="cover" prop="cover">
+          <CoverUpload v-model="formData.cover"></CoverUpload>
+        </el-form-item>
+        <el-form-item label="summary" prop="boardDesc">
+          <el-input
+              v-model="formData.boardDesc"
+              type="textarea"
+              placeholder="please enter summary"
+              :autosize="{ minRows: 4, maxRows: 4 }"
+          >
+          </el-input>
+        </el-form-item>
+      </el-form>
+    </Dialog>
   </div>
 </template>
 
