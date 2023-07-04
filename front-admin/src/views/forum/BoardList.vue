@@ -168,9 +168,46 @@
 </template>
 
 <script>
-export default {
-  name: "BoardList"
-}
+import { getCurrentInstance, ref, reactive, nextTick } from "vue";
+
+const { proxy } = getCurrentInstance();
+
+const api = {
+  loadBoard: "/board/loadBoard",
+  saveBoard: "/board/saveBoard",
+  delBoard: "/board/delBoard",
+  changeBoardSort: "/board/changeBoardSort",
+};
+
+const postTypeMap = {
+  0: "Only administrators are allowed to post",
+  1: "everyone is allowed to post",
+};
+
+const columns = [
+  {
+    label: "cover",
+    prop: "cover",
+    width: 80,
+    scopedSlots: "cover",
+  },
+  {
+    label: "board info",
+    prop: "boardName",
+    width: 210,
+    scopedSlots: "boardInfo",
+  },
+  {
+    label: "summary",
+    prop: "boardDesc",
+  },
+  {
+    label: "operation",
+    prop: "op",
+    width: 190,
+    scopedSlots: "op",
+  },
+];
 </script>
 
 <style scoped>
