@@ -208,6 +208,48 @@ const columns = [
     scopedSlots: "op",
   },
 ];
+
+const tableData = reactive({});
+const tableOptions = {
+  extHeight: 100,
+};
+
+//table
+const dataTableRef = ref();
+
+const tableChildData = reactive({});
+
+//current selected board
+const currentBoard = ref(null);
+
+const loadDataList = async () => {
+  let result = await proxy.Request({
+    url: api.loadBoard,
+  });
+  if (!result) {
+    return;
+  }
+  tableData.list = result.data;
+
+  if (currentBoard.value == null && result.data.length > 0) {
+    currentBoard.value = result.data[0];
+    tableChildData.list = result.data[0].children;
+  } else {
+    currentBoard.value = result.data.find((item) => {
+      return item.boardId == currentBoard.value.boardId;
+    });
+    tableChildData.list = currentBoard.value.children;
+  }
+  nextTick(() => {
+    dataTableRef.value.setCurrentRow("boardId", currentBoard.value.boardId);
+  });
+};
+
+//board click
+const rowClick = (row) => {
+  tableChildData.list = row.children;
+  currentBoard.value = row;
+};
 </script>
 
 <style scoped>
