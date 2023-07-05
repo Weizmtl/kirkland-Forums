@@ -295,6 +295,33 @@ const showEdit = (opType, boardType, data) => {
     }
   });
 };
+
+const submitForm = () => {
+  formDataRef.value.validate(async (valid) => {
+    if (!valid) {
+      return;
+    }
+    let params = {};
+    Object.assign(params, formData.value);
+    delete params.children;
+
+
+    if (!(params.cover instanceof File)) {
+      delete params.cover;
+    }
+
+    let result = await proxy.Request({
+      url: api.saveBoard,
+      params,
+    });
+    if (!result) {
+      return;
+    }
+    dialogConfig.show = false;
+    proxy.Message.success("save successfully");
+    loadDataList();
+  });
+};
 </script>
 
 <style scoped>
