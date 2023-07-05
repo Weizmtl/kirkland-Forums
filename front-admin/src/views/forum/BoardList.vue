@@ -322,6 +322,27 @@ const submitForm = () => {
     loadDataList();
   });
 };
+
+//delete
+const del = (data) => {
+  proxy.Confirm(`are you sure to delete${data.boardName}`, async () => {
+    let result = await proxy.Request({
+      url: api.delBoard,
+      params: {
+        boardId: data.boardId,
+      },
+    });
+    if (!result) {
+      return;
+    }
+
+    if (currentBoard.value.boardId == data.boardId) {
+      currentBoard.value = null;
+    }
+    loadDataList();
+  });
+};
+
 </script>
 
 <style scoped>
