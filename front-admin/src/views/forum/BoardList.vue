@@ -250,6 +250,51 @@ const rowClick = (row) => {
   tableChildData.list = row.children;
   currentBoard.value = row;
 };
+
+//new,modify
+const dialogConfig = reactive({
+  show: false,
+  title: "title",
+  buttons: [
+    {
+      type: "danger",
+      text: "ok",
+      click: (e) => {
+        submitForm();
+      },
+    },
+  ],
+});
+const formData = ref({});
+const rules = {
+  boardName: [{ required: true, message: "please enter name of board" }],
+  postType: [{ required: true, message: "Please select whether to allow Posting" }],
+};
+const formDataRef = ref();
+const showEdit = (opType, boardType, data) => {
+  dialogConfig.show = true;
+  nextTick(() => {
+    formDataRef.value.resetFields();
+    if (opType == "add") {
+      dialogConfig.title = "new board";
+      formData.value = {};
+    } else if (opType == "update") {
+      dialogConfig.title = "modify board";
+      formData.value = JSON.parse(JSON.stringify(data));
+
+      if (formData.value.cover) {
+        formData.value.cover = { imageUrl: formData.value.cover };
+      }
+    }
+    formData.value.boardType = boardType;
+    if (boardType == 1) {
+      formData.value.pBoardName = currentBoard.value.boardName;
+      formData.value.pBoardId = currentBoard.value.boardId;
+    } else {
+      formData.value.pBoardId = 0;
+    }
+  });
+};
 </script>
 
 <style scoped>
