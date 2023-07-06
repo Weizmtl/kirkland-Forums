@@ -343,8 +343,50 @@ const del = (data) => {
   });
 };
 
+//Modified sort
+const changeSort = async (index, type, borderType) => {
+  let dataList = tableData.list;
+  if (borderType == 1) {
+    dataList = tableChildData.list;
+  }
+  if (
+      (type === "down" && index === dataList.length - 1) ||
+      (type === "up" && index === 0)
+  ) {
+    return;
+  }
+  let temp = dataList[index];
+  let number = type == "down" ? 1 : -1;
+  dataList.splice(index, 1);
+  dataList.splice(index + number, 0, temp);
+
+  let borderIdList = [];
+  dataList.forEach((element) => {
+    borderIdList.push(element.boardId);
+  });
+
+  let result = await proxy.Request({
+    url: api.changeBoardSort,
+    params: {
+      boardIds: borderIdList.join(","),
+    },
+  });
+
+  if (!result) {
+    return;
+  }
+  proxy.Message.success("resort successfully");
+  loadDataList();
+};
 </script>
 
-<style scoped>
-
+<style lang="scss">
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .a-link {
+    font-size: 14px;
+  }
+}
 </style>
